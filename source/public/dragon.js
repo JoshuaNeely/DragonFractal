@@ -11,11 +11,14 @@ function DragonController($scope, $routeParams) {
   var ctx = canvas.getContext("2d");
 
   var background_color = "#111111";
-  ctx.strokeStyle = "#ff00ff";
+  var line_color = "#ff00ff";
+  ctx.strokeStyle = line_color;
 
   $scope.pattern = [1,-1,-1];
   var depth = 0;
   var max_depth = 15;
+
+  var scale = 1.0;
 
   p1 = {x:canvas.width*0.2, y:canvas.height*0.4};
   p2 = {x:canvas.width*0.8, y:canvas.height*0.4};
@@ -27,18 +30,25 @@ function DragonController($scope, $routeParams) {
   addEventListener('keydown', function(event) {    
     if(event.keyCode == 38) {         // up
       deepen();
-      redraw();
     }
     else if(event.keyCode == 40) {    // down
       simplify();
-      redraw();
     }
+    else if(event.keyCode == 33) {    // page up
+      scale /= 2.0;
+    }
+    else if(event.keyCode == 34) {    // page down
+      scale *= 2.0;
+    }
+
+    ctx.setTransform(scale, 0,0, scale, 0,0 );
+    redraw();
   });
 
   // ------ functions ------
   function draw_background() {
     ctx.fillStyle = background_color;
-    ctx.fillRect(0,0, canvas.width, canvas.height);
+    ctx.fillRect(0,0, canvas.width*(1.0/scale), canvas.height*(1.0/scale));
   }
 
   function redraw() {
