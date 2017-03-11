@@ -161,7 +161,7 @@ function DragonController($scope, $routeParams) {
 
   function scale_multiply(multiplier) {
     var temp_scale = scale * multiplier;
-    if (temp_scale <= max_scale && temp_scale >= min_scale && !override) {
+    if (temp_scale <= max_scale && temp_scale >= min_scale || override) {
       scale = temp_scale;
     }
   }
