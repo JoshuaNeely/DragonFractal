@@ -30,27 +30,52 @@ function DragonController($scope, $routeParams) {
   redraw(); 
 
   // ------ controls ------
+  var override = false;
+  var x_pan_offset = 0;
+  var y_pan_offset = 0;
+  var pan_rate = 5;
+
   addEventListener('keydown', function(event) {
     draw_background(-canvas.width, -canvas.height, canvas.width*3, canvas.height*3);
+    var ekc = event.keyCode;
 
-    if(event.keyCode == 38) {         // up
-      deepen();
+    if (ekc == 16) {
+      override = true;
     }
-    else if(event.keyCode == 40) {    // down
+
+    if (ekc == 38) {         // up
+      deepen();
+    } else if (ekc == 40) {    // down
       simplify();
     }
-    else if(event.keyCode == 33) {    // page up
+
+      else if (ekc == 33) {    // page up
       scale_multiply(0.80);
-    }
-    else if(event.keyCode == 34) {    // page down
+    } else if (ekc == 34) {    // page down
       scale_multiply(1.2);
+    }
+
+      else if (ekc == 87) {    // W
+      y_pan_offset += pan_rate;
+    } else if (ekc == 83) {    // S
+      y_pan_offset -= pan_rate;
+    } else if (ekc == 65) {    // A
+      x_pan_offset += pan_rate;
+    } else if (ekc == 68) {    // D
+      x_pan_offset -= pan_rate;
     }
 
     var x_scale_offset = (canvas.width - scale*canvas.width)/2;
     var y_scale_offset = (canvas.height -scale*canvas.height)/2;
-    ctx.setTransform(scale, 0,0, scale, x_scale_offset, y_scale_offset );
+    ctx.setTransform(scale, 0,0, scale, x_scale_offset + x_pan_offset*scale, y_scale_offset + y_pan_offset*scale );
 
     redraw();
+  });
+
+  addEventListener('keyup', function(event) {
+    if(event.keyCode == 16) {
+      override = false;
+    }
   });
 
   // ------ functions ------
@@ -74,7 +99,9 @@ function DragonController($scope, $routeParams) {
   }
 
   function deepen() {
-    if (points.length <= 1 || depth >= max_depth)
+    if (points.length <= 1 )
+      return;
+    if (depth >= max_depth && !override)
       return;
 
     depth += 1;
@@ -134,7 +161,7 @@ function DragonController($scope, $routeParams) {
 
   function scale_multiply(multiplier) {
     var temp_scale = scale * multiplier;
-    if (temp_scale <= max_scale && temp_scale >= min_scale) {
+    if (temp_scale <= max_scale && temp_scale >= min_scale && !override) {
       scale = temp_scale;
     }
   }
