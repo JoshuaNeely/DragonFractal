@@ -14,6 +14,7 @@ function DragonController($scope, $routeParams) {
   ctx.strokeStyle = "#ff00ff";
 
   $scope.pattern = [1,-1,-1];
+  var depth = 0;
 
   p1 = {x:canvas.width*0.2, y:canvas.height*0.4};
   p2 = {x:canvas.width*0.8, y:canvas.height*0.4};
@@ -23,12 +24,12 @@ function DragonController($scope, $routeParams) {
 
   // ------ controls ------
   addEventListener('keydown', function(event) {    
-    if(event.keyCode == 37) {         // left
-      simplify();
+    if(event.keyCode == 38) {         // up
+      deepen();
       redraw();
     }
-    else if(event.keyCode == 39) {    // right
-      deepen();
+    else if(event.keyCode == 40) {    // down
+      simplify();
       redraw();
     }
   });
@@ -56,8 +57,10 @@ function DragonController($scope, $routeParams) {
   }
 
   function deepen() {
-    if (points.length <= 1)
+    if (points.length <= 1 || depth > 16)
       return;
+
+    depth += 1;
 
     var disposable_pattern = $scope.pattern.slice();
 
@@ -100,6 +103,8 @@ function DragonController($scope, $routeParams) {
     if (!points.length || !(points.length % 2))
       return;
 
+    depth -= 1;
+
     var new_points = [];
     for (var i=0; i<points.length; i++) {
       if (!i || !(i%2)) {
@@ -108,5 +113,21 @@ function DragonController($scope, $routeParams) {
     }
 
     points = new_points;
+  }
+
+  $scope.verify_input = function() {
+    var array = $scope.input_pattern.split(',');
+    var valid = true;
+
+    for (var i=0; i<array.length; i++) {
+      array[i] = parseInt( array[i] );
+      if (array[i] !== 1 && array[i] !== 0 && array[i] !== -1) {
+        valid = false;
+      }
+    }
+
+    if (valid) {
+      $scope.pattern = array;
+    }
   }
 }
