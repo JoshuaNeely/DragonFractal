@@ -13,7 +13,7 @@ function DragonController($scope, $routeParams) {
   var background_color = "#111111";
   ctx.strokeStyle = "#ff00ff";
 
-  var pattern = [1,-1];
+  $scope.pattern = [1,-1,-1];
 
   p1 = {x:canvas.width*0.2, y:canvas.height*0.4};
   p2 = {x:canvas.width*0.8, y:canvas.height*0.4};
@@ -59,6 +59,8 @@ function DragonController($scope, $routeParams) {
     if (points.length <= 1)
       return;
 
+    var disposable_pattern = $scope.pattern.slice();
+
     var new_points = [ points[0] ];
     for (var i=0; i<points.length-1; i++) {
       var p1 = points[i];
@@ -71,16 +73,16 @@ function DragonController($scope, $routeParams) {
       var angle = angle_radians(p1,p2);
       var angle_change = (3.14159/4.0);
 
-      if (pattern[0] == 1) {
+      if (disposable_pattern[0] == 1) {
         var new_angle = angle + angle_change;
       } 
-      else if (pattern[0] == -1 ) {
+      else if (disposable_pattern[0] == -1 ) {
         var new_angle = angle - angle_change;
       }
       else {
         var new_angle = angle;
       }
-      pattern.unshift( pattern.pop() );
+      disposable_pattern.unshift( disposable_pattern.pop() );
 
       var xdist = leg_dist * Math.cos(new_angle);
       var ydist = leg_dist * Math.sin(new_angle);
@@ -106,9 +108,5 @@ function DragonController($scope, $routeParams) {
     }
 
     points = new_points;
-
-    if (!(points.length % 2)) {
-      pattern.unshift( pattern.pop() );
-    }
   }
 }
