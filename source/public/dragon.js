@@ -15,6 +15,7 @@ function DragonController($scope, $routeParams) {
 
   $scope.pattern = [1,-1,-1];
   var depth = 0;
+  var max_depth = 15;
 
   p1 = {x:canvas.width*0.2, y:canvas.height*0.4};
   p2 = {x:canvas.width*0.8, y:canvas.height*0.4};
@@ -57,7 +58,7 @@ function DragonController($scope, $routeParams) {
   }
 
   function deepen() {
-    if (points.length <= 1 || depth > 16)
+    if (points.length <= 1 || depth >= max_depth)
       return;
 
     depth += 1;
