@@ -19,15 +19,20 @@ function DragonController($scope, $routeParams) {
   var max_depth = 15;
 
   var scale = 1.0;
+  var min_scale = 0.01;
+  var max_scale = 10;
 
   p1 = {x:canvas.width*0.2, y:canvas.height*0.4};
   p2 = {x:canvas.width*0.8, y:canvas.height*0.4};
   var points = [p1,p2];
 
+  draw_background(0,0, canvas.width, canvas.height);
   redraw(); 
 
   // ------ controls ------
-  addEventListener('keydown', function(event) {    
+  addEventListener('keydown', function(event) {
+    draw_background(-canvas.width, -canvas.height, canvas.width*3, canvas.height*3);
+
     if(event.keyCode == 38) {         // up
       deepen();
     }
@@ -35,25 +40,26 @@ function DragonController($scope, $routeParams) {
       simplify();
     }
     else if(event.keyCode == 33) {    // page up
-      scale /= 2.0;
+      scale_multiply(0.80);
     }
     else if(event.keyCode == 34) {    // page down
-      scale *= 2.0;
+      scale_multiply(1.2);
     }
 
-    ctx.setTransform(scale, 0,0, scale, 0,0 );
+    var x_scale_offset = (canvas.width - scale*canvas.width)/2;
+    var y_scale_offset = (canvas.height -scale*canvas.height)/2;
+    ctx.setTransform(scale, 0,0, scale, x_scale_offset, y_scale_offset );
+
     redraw();
   });
 
   // ------ functions ------
-  function draw_background() {
+  function draw_background(x1,y1, x2,y2) {
     ctx.fillStyle = background_color;
-    ctx.fillRect(0,0, canvas.width*(1.0/scale), canvas.height*(1.0/scale));
+    ctx.fillRect(x1,y1, x2,y2);
   }
 
   function redraw() {
-    draw_background();
-
     if (!points.length)
       return;
 
@@ -124,6 +130,13 @@ function DragonController($scope, $routeParams) {
     }
 
     points = new_points;
+  }
+
+  function scale_multiply(multiplier) {
+    var temp_scale = scale * multiplier;
+    if (temp_scale <= max_scale && temp_scale >= min_scale) {
+      scale = temp_scale;
+    }
   }
 
   $scope.verify_input = function() {
