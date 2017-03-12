@@ -30,6 +30,7 @@ function DragonController($scope, $routeParams) {
   // ------ controls ------
   var override = false;
   var seed = false;
+  var set_pattern = false;
   var x_pan_offset = 0;
   var y_pan_offset = 0;
   var pan_rate = 5;
@@ -42,17 +43,28 @@ function DragonController($scope, $routeParams) {
       override = true;
     } 
     else if (ekc == 17) {   // control
-      blank();
-      seed = true;
+      set_pattern = true;
+      $scope.pattern = [];
+      $scope.$apply();
     }
     else if (ekc == 18) {   // alt
       reset();
     }
 
     if (ekc == 38) {         // up
-      deepen();
+      if (set_pattern) {
+        $scope.pattern.push(1);
+        $scope.$apply();
+      } else {
+        deepen();
+      }
     } else if (ekc == 40) {    // down
-      simplify();
+      if (set_pattern) {
+        $scope.pattern.push(-1);
+        $scope.$apply();
+      } else {
+        simplify();
+      }
     }
 
       else if (ekc == 33) {    // page up
@@ -81,7 +93,7 @@ function DragonController($scope, $routeParams) {
       override = false;
     }
     else if (event.keyCode == 17) {
-      seed = false;
+      set_pattern = false;
     }
   });
 
@@ -194,7 +206,6 @@ function DragonController($scope, $routeParams) {
     scale = 1.0;
     x_pan_offset = 0;
     y_pan_offset = 0;
-    $scope.pattern = [1,-1];
     depth = 0;
 
     points = [];
