@@ -32,10 +32,10 @@ function DragonController($scope, $routeParams) {
   ctx.strokeStyle = line_color;
 
   $scope.pattern = [1,-1];
-  var depth = 0;
+  $scope.depth = 0;
   var max_depth = 15;
 
-  var scale = 1.0;
+  $scope.scale = 1.0;
   var min_scale = 0.01;
   var max_scale = 10;
 
@@ -59,7 +59,6 @@ function DragonController($scope, $routeParams) {
     else if (ekc == 17) {   // control
       set_pattern = true;
       $scope.pattern = [];
-      $scope.$apply();
     }
     else if (ekc == 18) {   // alt
       reset();
@@ -68,21 +67,18 @@ function DragonController($scope, $routeParams) {
     if (ekc == 38) {         // up
       if (set_pattern) {
         $scope.pattern.push(-1);
-        $scope.$apply();
       } else {
         deepen();
       }
     } else if (ekc == 40) {    // down
       if (set_pattern) {
         $scope.pattern.push(1);
-        $scope.$apply();
       } else {
         simplify();
       }
     } else if (ekc == 37 || ekc == 39) {  // left or right
       if (set_pattern) {
         $scope.pattern.push(0);
-        $scope.$apply();
       }
     }
 
@@ -105,6 +101,7 @@ function DragonController($scope, $routeParams) {
 
     calculate_transform();
     redraw();
+    $scope.$apply();
   });
 
   addEventListener('keyup', function(event) {
@@ -146,10 +143,10 @@ function DragonController($scope, $routeParams) {
   function deepen() {
     if (points.length <= 1 )
       return;
-    if (depth >= max_depth && !override)
+    if ($scope.depth >= max_depth && !override)
       return;
 
-    depth += 1;
+    $scope.depth += 1;
 
     var pat_len = $scope.pattern.length;
 
@@ -191,7 +188,7 @@ function DragonController($scope, $routeParams) {
     if (!points.length || !(points.length % 2))
       return;
 
-    depth -= 1;
+    $scope.depth -= 1;
 
     var new_points = [];
     for (var i=0; i<points.length; i++) {
@@ -204,9 +201,9 @@ function DragonController($scope, $routeParams) {
   }
 
   function scale_multiply(multiplier) {
-    var temp_scale = scale * multiplier;
+    var temp_scale = $scope.scale * multiplier;
     if (temp_scale <= max_scale && temp_scale >= min_scale || override) {
-      scale = temp_scale;
+      $scope.scale = temp_scale;
     }
   }
 
@@ -221,10 +218,10 @@ function DragonController($scope, $routeParams) {
   }
 
   function blank() {
-    scale = 1.0;
+    $scope.scale = 1.0;
     x_pan_offset = 0;
     y_pan_offset = 0;
-    depth = 0;
+    $scope.depth = 0;
 
     points = [];
 
@@ -233,9 +230,9 @@ function DragonController($scope, $routeParams) {
   }
 
   function calculate_transform() {
-    var x_scale_offset = (canvas.width - scale*canvas.width)/2;
-    var y_scale_offset = (canvas.height -scale*canvas.height)/2;
-    ctx.setTransform(scale, 0,0, scale, x_scale_offset + x_pan_offset*scale, y_scale_offset + y_pan_offset*scale );
+    var x_scale_offset = (canvas.width - $scope.scale*canvas.width)/2;
+    var y_scale_offset = (canvas.height -$scope.scale*canvas.height)/2;
+    ctx.setTransform($scope.scale, 0,0, $scope.scale, x_scale_offset + x_pan_offset*$scope.scale, y_scale_offset + y_pan_offset*$scope.scale );
   }
 
   $scope.verify_input = function() {

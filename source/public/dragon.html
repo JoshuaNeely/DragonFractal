@@ -12,6 +12,13 @@
     <p>WASD : pan image</p>
     <p>PAGE UP / DOWN : zoom out / in</p>
     <p>SHIFT : overide limits on iteration / zoom</p>
-    <div>Pattern: {{pattern | patternInterp}}</div>
+    <p>ALT : reset settings</p>
+    
+  </div>
+  <div class="status-container">
+    <h3>Status</h3>
+    <p>Pattern: {{pattern | patternInterp}}</p>
+    <p>Scale: {{scale | number:2}}</p>
+    <p>Iteration: {{depth}}</p>
   </div>
 </body>
