@@ -17,7 +17,7 @@ function DragonController($scope, $routeParams) {
   var line_color = "#ff00ff";
   ctx.strokeStyle = line_color;
 
-  $scope.pattern = [1,-1,-1];
+  $scope.pattern = [1,-1];
   var depth = 0;
   var max_depth = 15;
 
@@ -26,15 +26,10 @@ function DragonController($scope, $routeParams) {
   var max_scale = 10;
 
   reset();
-  //var p1 = {x:canvas.width*0.2, y:canvas.height*0.4};
-  //var p2 = {x:canvas.width*0.8, y:canvas.height*0.4};
-  //var points = [p1,p2];
-
-  //draw_background(0,0, canvas.width, canvas.height);
-  //redraw(); 
 
   // ------ controls ------
   var override = false;
+  var seed = false;
   var x_pan_offset = 0;
   var y_pan_offset = 0;
   var pan_rate = 5;
@@ -199,7 +194,7 @@ function DragonController($scope, $routeParams) {
     scale = 1.0;
     x_pan_offset = 0;
     y_pan_offset = 0;
-    $scope.pattern = [1,-1,-1];
+    $scope.pattern = [1,-1];
     depth = 0;
 
     points = [];
