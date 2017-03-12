@@ -47,7 +47,7 @@ function DragonController($scope, $routeParams) {
       override = true;
     } 
     else if (ekc == 17) {   // control
-      points = [];
+      blank();
       seed = true;
     }
     else if (ekc == 18) {   // alt
@@ -76,21 +76,25 @@ function DragonController($scope, $routeParams) {
       x_pan_offset -= pan_rate;
     }
 
-    var x_scale_offset = (canvas.width - scale*canvas.width)/2;
-    var y_scale_offset = (canvas.height -scale*canvas.height)/2;
-    ctx.setTransform(scale, 0,0, scale, x_scale_offset + x_pan_offset*scale, y_scale_offset + y_pan_offset*scale );
 
+    calculate_transform();
     redraw();
   });
 
   addEventListener('keyup', function(event) {
-    if(event.keyCode == 16) {
+    if (event.keyCode == 16) {
       override = false;
+    }
+    else if (event.keyCode == 17) {
+      seed = false;
     }
   });
 
   addEventListener('click', function(event) {
-    
+    if (seed) {
+      points.push( {x:event.x, y:event.y} );
+      redraw();
+    }
   });
 
   // ------ functions ------
@@ -182,19 +186,32 @@ function DragonController($scope, $routeParams) {
   }
 
   function reset() {
-    scale = 1.0;
-    x_pan_offset = 0;
-    y_pan_offset = 0;
-    $scope.pattern = [1,-1,-1];
-    depth = 0;
-
-    draw_background(0,0, canvas.width, canvas.height);
+    blank();
 
     p1 = {x:canvas.width*0.2, y:canvas.height*0.4};
     p2 = {x:canvas.width*0.8, y:canvas.height*0.4};
     points = [p1,p2];
 
     redraw();
+  }
+
+  function blank() {
+    scale = 1.0;
+    x_pan_offset = 0;
+    y_pan_offset = 0;
+    $scope.pattern = [1,-1,-1];
+    depth = 0;
+
+    points = [];
+
+    draw_background(0,0, canvas.width, canvas.height);
+    calculate_transform();
+  }
+
+  function calculate_transform() {
+    var x_scale_offset = (canvas.width - scale*canvas.width)/2;
+    var y_scale_offset = (canvas.height -scale*canvas.height)/2;
+    ctx.setTransform(scale, 0,0, scale, x_scale_offset + x_pan_offset*scale, y_scale_offset + y_pan_offset*scale );
   }
 
   $scope.verify_input = function() {
