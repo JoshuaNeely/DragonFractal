@@ -25,12 +25,13 @@ function DragonController($scope, $routeParams) {
   var min_scale = 0.01;
   var max_scale = 10;
 
-  p1 = {x:canvas.width*0.2, y:canvas.height*0.4};
-  p2 = {x:canvas.width*0.8, y:canvas.height*0.4};
-  var points = [p1,p2];
+  reset();
+  //var p1 = {x:canvas.width*0.2, y:canvas.height*0.4};
+  //var p2 = {x:canvas.width*0.8, y:canvas.height*0.4};
+  //var points = [p1,p2];
 
-  draw_background(0,0, canvas.width, canvas.height);
-  redraw(); 
+  //draw_background(0,0, canvas.width, canvas.height);
+  //redraw(); 
 
   // ------ controls ------
   var override = false;
@@ -42,8 +43,15 @@ function DragonController($scope, $routeParams) {
     draw_background(-canvas.width, -canvas.height, canvas.width*3, canvas.height*3);
     var ekc = event.keyCode;
 
-    if (ekc == 16) {
+    if (ekc == 16) {        // shift
       override = true;
+    } 
+    else if (ekc == 17) {   // control
+      points = [];
+      seed = true;
+    }
+    else if (ekc == 18) {   // alt
+      reset();
     }
 
     if (ekc == 38) {         // up
@@ -79,6 +87,10 @@ function DragonController($scope, $routeParams) {
     if(event.keyCode == 16) {
       override = false;
     }
+  });
+
+  addEventListener('click', function(event) {
+    
   });
 
   // ------ functions ------
@@ -167,6 +179,22 @@ function DragonController($scope, $routeParams) {
     if (temp_scale <= max_scale && temp_scale >= min_scale || override) {
       scale = temp_scale;
     }
+  }
+
+  function reset() {
+    scale = 1.0;
+    x_pan_offset = 0;
+    y_pan_offset = 0;
+    $scope.pattern = [1,-1,-1];
+    depth = 0;
+
+    draw_background(0,0, canvas.width, canvas.height);
+
+    p1 = {x:canvas.width*0.2, y:canvas.height*0.4};
+    p2 = {x:canvas.width*0.8, y:canvas.height*0.4};
+    points = [p1,p2];
+
+    redraw();
   }
 
   $scope.verify_input = function() {
