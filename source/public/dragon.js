@@ -10,6 +10,9 @@ function DragonController($scope, $routeParams) {
   var canvas = document.getElementById("dragonCanvas");
   var ctx = canvas.getContext("2d");
 
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight-75;
+
   var background_color = "#111111";
   var line_color = "#ff00ff";
   ctx.strokeStyle = line_color;

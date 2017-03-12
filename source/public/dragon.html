@@ -2,12 +2,10 @@
 </head>
 <body>
   <div>
-    <canvas id="dragonCanvas" height="800px" width="800px"></canvas>
+    <canvas id="dragonCanvas" height="1000px" width="1000px" style="width:100vw; height:100vh-50px;"></canvas>
   </div>
-  <div>
-    Pattern: {{pattern}}
-  </div>
-  <div>
-    <input ng-change="verify_input()" ng-model="input_pattern"></input>
+  <div height="75px">
+    <div>Pattern: {{pattern}}</div>
+    <div><input ng-change="verify_input()" ng-model="input_pattern"></div>
   </div>
 </body>
