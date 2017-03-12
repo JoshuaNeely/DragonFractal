@@ -65,6 +65,11 @@ function DragonController($scope, $routeParams) {
       } else {
         simplify();
       }
+    } else if (ekc == 37 || ekc == 39) {  // left or right
+      if (set_pattern) {
+        $scope.pattern.push(0);
+        $scope.$apply();
+      }
     }
 
       else if (ekc == 33) {    // page up
