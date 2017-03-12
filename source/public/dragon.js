@@ -1,5 +1,22 @@
 var dragon = angular.module('dragon', ['ngRoute']);
 
+dragon.filter('patternInterp', function() {
+  return function(pattern) {
+    var output = [];
+    for (item of pattern) {
+      if (item == 1) {
+        output.push( "down" );
+      } else if (item == -1 ) {
+        output.push( "up" );
+      } else if (item == 0) {
+        output.push( "straight" );
+      }
+    }
+    output = output.join(', ');
+    return output;
+  };
+});
+
 dragon.component('dragon', {
   templateUrl : '/dragon.html',
   bindings : {},
@@ -9,9 +26,6 @@ dragon.component('dragon', {
 function DragonController($scope, $routeParams) {
   var canvas = document.getElementById("dragonCanvas");
   var ctx = canvas.getContext("2d");
-
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight-75;
 
   var background_color = "#111111";
   var line_color = "#ff00ff";
@@ -53,14 +67,14 @@ function DragonController($scope, $routeParams) {
 
     if (ekc == 38) {         // up
       if (set_pattern) {
-        $scope.pattern.push(1);
+        $scope.pattern.push(-1);
         $scope.$apply();
       } else {
         deepen();
       }
     } else if (ekc == 40) {    // down
       if (set_pattern) {
-        $scope.pattern.push(-1);
+        $scope.pattern.push(1);
         $scope.$apply();
       } else {
         simplify();

@@ -1,10 +1,14 @@
 <header>
+  <link rel="stylesheet" href="dragon.css"/>
 </head>
 <body>
-  <div>
-    <canvas id="dragonCanvas" height="1000px" width="1000px" style="width:100vw; height:100vh-50px;"></canvas>
+  <div class="canvas-container">
+    <canvas id="dragonCanvas" height="1000px" width="1000px" style="width:100%; height:100%;"></canvas>
   </div>
-  <div height="75px">
-    <div>Pattern: {{pattern}}</div>
+  <div class="controls-container">
+    <h3>Controls</h3>
+    <p>UP / DOWN arroy keys : add / remove iterations</p>
+    <p>CTRL + UP / DOWN : set fractal pattern</p>
+    <div>Pattern: {{pattern | patternInterp}}</div>
   </div>
 </body>
