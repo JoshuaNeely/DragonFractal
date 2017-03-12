@@ -151,7 +151,7 @@ function DragonController($scope, $routeParams) {
 
     depth += 1;
 
-    var disposable_pattern = $scope.pattern.slice();
+    var pat_len = $scope.pattern.length;
 
     var new_points = [ points[0] ];
     for (var i=0; i<points.length-1; i++) {
@@ -165,16 +165,15 @@ function DragonController($scope, $routeParams) {
       var angle = angle_radians(p1,p2);
       var angle_change = (3.14159/4.0);
 
-      if (disposable_pattern[0] == 1) {
+      if ($scope.pattern[i%pat_len] == 1) {
         var new_angle = angle + angle_change;
       } 
-      else if (disposable_pattern[0] == -1 ) {
+      else if ($scope.pattern[i%pat_len] == -1 ) {
         var new_angle = angle - angle_change;
       }
       else {
         var new_angle = angle;
       }
-      disposable_pattern.unshift( disposable_pattern.pop() );
 
       var xdist = leg_dist * Math.cos(new_angle);
       var ydist = leg_dist * Math.sin(new_angle);
