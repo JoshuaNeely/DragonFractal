@@ -44,6 +44,7 @@ function DragonController($scope, $routeParams) {
   // ------ controls ------
   var override = false;
   var seed = false;
+  var seed_cleared = false;
   var set_pattern = false;
   var x_pan_offset = 0;
   var y_pan_offset = 0;
@@ -55,6 +56,7 @@ function DragonController($scope, $routeParams) {
 
     if (ekc == 16) {        // shift
       override = true;
+      seed = true;
     } 
     else if (ekc == 17) {   // control
       set_pattern = true;
@@ -107,6 +109,8 @@ function DragonController($scope, $routeParams) {
   addEventListener('keyup', function(event) {
     if (event.keyCode == 16) {
       override = false;
+      seed = false;
+      seed_cleared = false;
     }
     else if (event.keyCode == 17) {
       set_pattern = false;
@@ -115,8 +119,17 @@ function DragonController($scope, $routeParams) {
 
   addEventListener('click', function(event) {
     if (seed) {
-      points.push( {x:event.x, y:event.y} );
+      if (!seed_cleared) {
+        blank();
+        seed_cleared = true;
+      }
+
+      var px = event.offsetX/canvas.offsetWidth * canvas.width;
+      var py = event.offsetY/canvas.offsetHeight * canvas.height;
+
+      points.push( {x:px, y:py} );
       redraw();
+      $scope.$apply();
     }
   });
 
