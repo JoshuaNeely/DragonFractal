@@ -223,8 +223,8 @@ function DragonController($scope, $routeParams) {
   function reset() {
     blank();
 
-    p1 = {x:canvas.width*0.2, y:canvas.height*0.4};
-    p2 = {x:canvas.width*0.8, y:canvas.height*0.4};
+    p1 = {x:canvas.width*0.2, y:canvas.height*0.5};
+    p2 = {x:canvas.width*0.8, y:canvas.height*0.5};
     points = [p1,p2];
 
     redraw();
