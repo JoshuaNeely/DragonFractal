@@ -7,7 +7,7 @@ Requires npm and nodejs.
 Setup:
 
 1. npm install
-2. npm start
+2. npm start [port number]
 
 Server hosted on localhost, default browser port 80.
 
