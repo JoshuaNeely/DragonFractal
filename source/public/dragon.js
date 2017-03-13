@@ -27,11 +27,11 @@ function DragonController($scope, $routeParams) {
   var canvas = document.getElementById("dragonCanvas");
   var ctx = canvas.getContext("2d");
 
-  var background_color = "#111111";
+  var background_color = "#000000";
   var line_color = "#ff00ff";
   ctx.strokeStyle = line_color;
 
-  $scope.use_color = true;
+  $scope.use_color = "true";
   var color_start = [255,0,0];
   var color_end = [0,0,255];
   var color_diff = [];

@@ -23,5 +23,19 @@
       <p>Scale: {{scale | number:2}}</p>
       <p>Iteration: {{depth}}</p>
     </div>
+    <div class="settings-container">
+      <h3>Settings</h3>
+      <form>
+        <label>
+          Monocolor:
+          <input type="radio" ng-model="use_color" value=""></input>
+        </label>
+        <br />
+        <label>
+          Gradient:
+          <input type="radio" ng-model="use_color" value="true" checked></input>
+        </label>
+      </form>
+    </div>
   </div>
 </body>
