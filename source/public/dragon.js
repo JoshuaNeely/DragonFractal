@@ -285,20 +285,4 @@ function DragonController($scope, $routeParams) {
     var y_scale_offset = (canvas.height -$scope.scale*canvas.height)/2;
     ctx.setTransform($scope.scale, 0,0, $scope.scale, x_scale_offset + x_pan_offset*$scope.scale, y_scale_offset + y_pan_offset*$scope.scale );
   }
-
-  $scope.verify_input = function() {
-    var array = $scope.input_pattern.split(',');
-    var valid = true;
-
-    for (var i=0; i<array.length; i++) {
-      array[i] = parseInt( array[i] );
-      if (array[i] !== 1 && array[i] !== 0 && array[i] !== -1) {
-        valid = false;
-      }
-    }
-
-    if (valid) {
-      $scope.pattern = array;
-    }
-  }
 }
