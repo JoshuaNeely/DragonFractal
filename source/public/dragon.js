@@ -28,22 +28,17 @@ function DragonController($scope, $routeParams) {
   var ctx = canvas.getContext("2d");
 
   var background_color = "#000000";
-  var line_color = "#ff00ff";
-  ctx.strokeStyle = line_color;
-
+  $scope.monocolor_color = "#ff00ff";
+  $scope.gradient_color_1 = "#00ff00";
+  $scope.gradient_color_2 = "#0000ff";
   $scope.use_color = "true";
-  var color_start = [255,0,0];
-  var color_end = [0,0,255];
-  var color_diff = [];
-  for (var i=0; i<3; i++) {
-    color_diff.push( color_end[i] - color_start[i] );
-  }
+  $scope.continuous_gradient = false;
+  $scope.segments = 4;
 
   $scope.pattern = [1,-1];
   $scope.depth = 0;
   var max_depth = 15;
 
-  $scope.scale = 1.0;
   var min_scale = 0.01;
   var max_scale = 10;
 
@@ -152,6 +147,7 @@ function DragonController($scope, $routeParams) {
       return;
 
     if ($scope.use_color == false) {
+      ctx.strokeStyle = $scope.monocolor_color;
       ctx.beginPath();
       ctx.moveTo(points[0].x, points[0].y);
 
@@ -162,9 +158,26 @@ function DragonController($scope, $routeParams) {
       ctx.stroke();
     }
     else {
+      var color_start = hexToRgb($scope.gradient_color_1);
+      var color_end = hexToRgb($scope.gradient_color_2);
+      var color_diff = [];
+      for (var i=0; i<3; i++) {
+        color_diff.push( color_end[i] - color_start[i] );
+      }
 
-      for (var i=1.0; i<points.length; i++) {
-        var progress = i / (points.length-1);
+
+      var segment_size = points.length/$scope.segments;
+      var progress;
+      var len = points.length;
+
+      for (var i=1.0; i<len; i++) {
+        if (!$scope.continuous_gradient) {
+          var simplified = Math.floor(i / segment_size) * segment_size;
+          progress = simplified / (len-1);
+        } else {
+          progress = i / (len-1);  
+        }
+        
         var r = Math.round(color_start[0]+color_diff[0]*progress);
         var g = Math.round(color_start[1]+color_diff[1]*progress);
         var b = Math.round(color_start[2]+color_diff[2]*progress);
@@ -256,7 +269,7 @@ function DragonController($scope, $routeParams) {
   }
 
   function blank() {
-    $scope.scale = 1.0;
+    $scope.scale = 0.77;
     x_pan_offset = 0;
     y_pan_offset = 0;
     $scope.depth = 0;

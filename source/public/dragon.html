@@ -15,6 +15,9 @@
       <p>SHIFT : overide limits on iteration / zoom</p>
       <p>SHIFT + MOUSE CLICK : set initial points with mouse</p>
       <p>ALT : reset settings</p>
+      <br />
+      <p>you can change patterns halfway through a fractal's iterations to mix and match features...</p>
+      <p>trying placing custom points in a diamond shape...</p>
       
     </div>
     <div class="status-container">
@@ -26,15 +29,24 @@
     <div class="settings-container">
       <h3>Settings</h3>
       <form>
-        <label>
-          Monocolor:
-          <input type="radio" ng-model="use_color" value=""></input>
-        </label>
+        <span>Monocolor</span>
+        <input type="radio" ng-model="use_color" value="" />
+        <span>Color:</span>
+        <input type="text" class="color-input" ng-model="monocolor_color" ng-disabled="use_color"/>
+        
         <br />
-        <label>
-          Gradient:
-          <input type="radio" ng-model="use_color" value="true" checked></input>
-        </label>
+        
+        <span>Gradient</span>
+        <input type="radio" ng-model="use_color" value="true" checked />
+        <span>Color 1:</span>
+        <input type="text" class="color-input" ng-model="gradient_color_1" ng-disabled="!use_color" />
+        <span>Color 2:</span>
+        <input type="text" class="color-input" ng-model="gradient_color_2" ng-disabled="!use_color" />
+        <br />
+        Continuous Gradient
+        <input type="checkbox" ng-model="continuous_gradient" />
+        Segments:
+        <input type="number" ng-model="segments" ng-disabled="continuous_gradient" />
       </form>
     </div>
   </div>
