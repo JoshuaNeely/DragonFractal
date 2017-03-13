@@ -31,6 +31,14 @@ function DragonController($scope, $routeParams) {
   var line_color = "#ff00ff";
   ctx.strokeStyle = line_color;
 
+  $scope.use_color = true;
+  var color_start = [255,0,0];
+  var color_end = [0,0,255];
+  var color_diff = [];
+  for (var i=0; i<3; i++) {
+    color_diff.push( color_end[i] - color_start[i] );
+  }
+
   $scope.pattern = [1,-1];
   $scope.depth = 0;
   var max_depth = 15;
@@ -140,18 +148,35 @@ function DragonController($scope, $routeParams) {
   }
 
   function redraw() {
-    if (!points.length)
+    if (!points.length || points.length < 2)
       return;
 
-    ctx.beginPath();
-    ctx.moveTo(points[0].x, points[0].y);
+    if ($scope.use_color == false) {
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
 
-    for (var i=1; i<points.length; i++) {
-      ctx.lineTo(points[i].x, points[i].y);
+      for (var i=1; i<points.length; i++) {
+        ctx.lineTo(points[i].x, points[i].y);
+      }
+
+      ctx.stroke();
     }
+    else {
 
-    ctx.stroke();
-  }
+      for (var i=1.0; i<points.length; i++) {
+        var progress = i / (points.length-1);
+        var r = Math.round(color_start[0]+color_diff[0]*progress);
+        var g = Math.round(color_start[1]+color_diff[1]*progress);
+        var b = Math.round(color_start[2]+color_diff[2]*progress);
+        ctx.strokeStyle = rgbToHex( r,g,b );        
+
+        ctx.beginPath();
+        ctx.moveTo(points[i-1].x, points[i-1].y);
+        ctx.lineTo(points[i].x, points[i].y);
+        ctx.stroke();
+      }
+    }
+  }  
 
   function deepen() {
     if (points.length <= 1 )

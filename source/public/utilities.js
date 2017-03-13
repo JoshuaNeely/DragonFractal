@@ -25,3 +25,12 @@ function object_deep_copy(old_object) {
 function angle_radians(p1, p2) {
   return Math.atan2(p2.y - p1.y, p2.x - p1.x);
 }
+
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
