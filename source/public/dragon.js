@@ -211,7 +211,7 @@ function DragonController($scope, $routeParams) {
       var leg_dist = Math.sqrt(squared_dist / 2);
 
       var angle = angle_radians(p1,p2);
-      var angle_change = (3.14159/4.0);
+      var angle_change = (Math.PI/4.0);
 
       if ($scope.pattern[i%pat_len] == 1) {
         var new_angle = angle + angle_change;
