@@ -189,6 +189,9 @@ function DragonController($scope, $routeParams) {
       var total_len = points.length;
 
       for (var i=1.0; i<len; i++) {
+        if (points_in_view[i].index-1 != points_in_view[i-1].index)
+          continue;
+
         if (!$scope.continuous_gradient) {
           var simplified = Math.floor(points_in_view[i].index / segment_size) * segment_size;
           progress = simplified / (total_len-1);
