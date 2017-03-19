@@ -37,10 +37,13 @@ function DragonController($scope, $routeParams) {
 
   $scope.pattern = [1,-1];
   $scope.depth = 0;
+  $scope.scale = 0;
   var max_depth = 15;
 
   var min_scale = 0.01;
   var max_scale = 10;
+
+  var points = [];
 
   reset();
 
@@ -130,7 +133,7 @@ function DragonController($scope, $routeParams) {
       var px = event.offsetX/canvas.offsetWidth * canvas.width;
       var py = event.offsetY/canvas.offsetHeight * canvas.height;
 
-      points.push( {x:px, y:py} );
+      points.push( {x:px, y:py, ox:px, oy:py} );
       redraw();
       $scope.$apply();
     }
@@ -142,17 +145,31 @@ function DragonController($scope, $routeParams) {
     ctx.fillRect(x1,y1, x2,y2);
   }
 
+  function on_screen(point) {
+    return (point.x >= 0 && point.y >= 0 && point.x < canvas.width && point.y < canvas.height);
+  }
+
   function redraw() {
     if (!points.length || points.length < 2)
       return;
 
+    // exclude points that arent in view
+    var points_in_view = [];
+    for (var i=0; i<points.length; i++) {
+      var point = points[i];
+      if ((i==0 || on_screen(points[i-1])) || (i==points.length-1 || on_screen(points[i+1]))) {
+        point.index = i;
+        points_in_view.push( point );
+      }
+    }
+
     if ($scope.use_color == false) {
       ctx.strokeStyle = $scope.monocolor_color;
       ctx.beginPath();
-      ctx.moveTo(points[0].x, points[0].y);
+      ctx.moveTo(points_in_view[0].x, points_in_view[0].y);
 
-      for (var i=1; i<points.length; i++) {
-        ctx.lineTo(points[i].x, points[i].y);
+      for (var i=1; i<points_in_view.length; i++) {
+        ctx.lineTo(points_in_view[i].x, points_in_view[i].y);
       }
 
       ctx.stroke();
@@ -168,14 +185,15 @@ function DragonController($scope, $routeParams) {
 
       var segment_size = points.length/$scope.segments;
       var progress;
-      var len = points.length;
+      var len = points_in_view.length;
+      var total_len = points.length;
 
       for (var i=1.0; i<len; i++) {
         if (!$scope.continuous_gradient) {
-          var simplified = Math.floor(i / segment_size) * segment_size;
-          progress = simplified / (len-1);
+          var simplified = Math.floor(points_in_view[i].index / segment_size) * segment_size;
+          progress = simplified / (total_len-1);
         } else {
-          progress = i / (len-1);  
+          progress = points_in_view[i].index / (total_len-1);
         }
         
         var r = Math.round(color_start[0]+color_diff[0]*progress);
@@ -184,8 +202,8 @@ function DragonController($scope, $routeParams) {
         ctx.strokeStyle = rgbToHex( r,g,b );        
 
         ctx.beginPath();
-        ctx.moveTo(points[i-1].x, points[i-1].y);
-        ctx.lineTo(points[i].x, points[i].y);
+        ctx.moveTo(points_in_view[i-1].x, points_in_view[i-1].y);
+        ctx.lineTo(points_in_view[i].x, points_in_view[i].y);
         ctx.stroke();
       }
     }
@@ -210,6 +228,10 @@ function DragonController($scope, $routeParams) {
       var squared_dist = dist*dist;
       var leg_dist = Math.sqrt(squared_dist / 2);
 
+      var odist = Math.sqrt( Math.pow(p1.ox-p2.ox,2) + Math.pow(p1.oy-p2.oy,2) );
+      var osquared_dist = odist*odist;
+      var oleg_dist = Math.sqrt(osquared_dist / 2);
+
       var angle = angle_radians(p1,p2);
       var angle_change = (Math.PI/4.0);
 
@@ -226,7 +248,10 @@ function DragonController($scope, $routeParams) {
       var xdist = leg_dist * Math.cos(new_angle);
       var ydist = leg_dist * Math.sin(new_angle);
 
-      var middle_point = {x:p1.x+xdist, y:p1.y+ydist}; 
+      var oxdist = oleg_dist * Math.cos(new_angle);
+      var oydist = oleg_dist * Math.sin(new_angle);
+
+      var middle_point = {x:p1.x+xdist, y:p1.y+ydist, ox:p1.ox+oxdist, oy:p1.oy+oydist};
 
       new_points.push( middle_point );
       new_points.push( p2 );
@@ -261,8 +286,8 @@ function DragonController($scope, $routeParams) {
   function reset() {
     blank();
 
-    p1 = {x:canvas.width*0.2, y:canvas.height*0.5};
-    p2 = {x:canvas.width*0.8, y:canvas.height*0.5};
+    p1 = {x:canvas.width*0.2, y:canvas.height*0.5, ox:canvas.width*0.2, oy:canvas.height*0.5};
+    p2 = {x:canvas.width*0.8, y:canvas.height*0.5, ox:canvas.width*0.8, oy:canvas.height*0.5};
     points = [p1,p2];
 
     redraw();
@@ -283,6 +308,10 @@ function DragonController($scope, $routeParams) {
   function calculate_transform() {
     var x_scale_offset = (canvas.width - $scope.scale*canvas.width)/2;
     var y_scale_offset = (canvas.height -$scope.scale*canvas.height)/2;
-    ctx.setTransform($scope.scale, 0,0, $scope.scale, x_scale_offset + x_pan_offset*$scope.scale, y_scale_offset + y_pan_offset*$scope.scale );
+  
+    for (point of points) {
+      point.x = ((point.ox + x_pan_offset) * $scope.scale) + x_scale_offset + x_pan_offset;
+      point.y = ((point.oy + y_pan_offset) * $scope.scale) + y_scale_offset;
+    }
   }
 }
