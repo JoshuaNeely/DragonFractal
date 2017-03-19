@@ -37,10 +37,13 @@ function DragonController($scope, $routeParams) {
 
   $scope.pattern = [1,-1];
   $scope.depth = 0;
+  $scope.scale = 0;
   var max_depth = 15;
 
   var min_scale = 0.01;
   var max_scale = 10;
+
+  var points = [];
 
   reset();
 
@@ -130,7 +133,7 @@ function DragonController($scope, $routeParams) {
       var px = event.offsetX/canvas.offsetWidth * canvas.width;
       var py = event.offsetY/canvas.offsetHeight * canvas.height;
 
-      points.push( {x:px, y:py} );
+      points.push( {x:px, y:py, ox:px, oy:py} );
       redraw();
       $scope.$apply();
     }
@@ -210,6 +213,10 @@ function DragonController($scope, $routeParams) {
       var squared_dist = dist*dist;
       var leg_dist = Math.sqrt(squared_dist / 2);
 
+      var odist = Math.sqrt( Math.pow(p1.ox-p2.ox,2) + Math.pow(p1.oy-p2.oy,2) );
+      var osquared_dist = odist*odist;
+      var oleg_dist = Math.sqrt(osquared_dist / 2);
+
       var angle = angle_radians(p1,p2);
       var angle_change = (3.14159/4.0);
 
@@ -226,7 +233,10 @@ function DragonController($scope, $routeParams) {
       var xdist = leg_dist * Math.cos(new_angle);
       var ydist = leg_dist * Math.sin(new_angle);
 
-      var middle_point = {x:p1.x+xdist, y:p1.y+ydist}; 
+      var oxdist = oleg_dist * Math.cos(new_angle);
+      var oydist = oleg_dist * Math.sin(new_angle);
+
+      var middle_point = {x:p1.x+xdist, y:p1.y+ydist, ox:p1.ox+oxdist, oy:p1.oy+oydist};
 
       new_points.push( middle_point );
       new_points.push( p2 );
@@ -261,8 +271,8 @@ function DragonController($scope, $routeParams) {
   function reset() {
     blank();
 
-    p1 = {x:canvas.width*0.2, y:canvas.height*0.5};
-    p2 = {x:canvas.width*0.8, y:canvas.height*0.5};
+    p1 = {x:canvas.width*0.2, y:canvas.height*0.5, ox:canvas.width*0.2, oy:canvas.height*0.5};
+    p2 = {x:canvas.width*0.8, y:canvas.height*0.5, ox:canvas.width*0.8, oy:canvas.height*0.5};
     points = [p1,p2];
 
     redraw();
@@ -283,7 +293,11 @@ function DragonController($scope, $routeParams) {
   function calculate_transform() {
     var x_scale_offset = (canvas.width - $scope.scale*canvas.width)/2;
     var y_scale_offset = (canvas.height -$scope.scale*canvas.height)/2;
-    ctx.setTransform($scope.scale, 0,0, $scope.scale, x_scale_offset + x_pan_offset*$scope.scale, y_scale_offset + y_pan_offset*$scope.scale );
+  
+    for (point of points) {
+      point.x = ((point.ox + x_pan_offset) * $scope.scale) + x_scale_offset + x_pan_offset;
+      point.y = ((point.oy + y_pan_offset) * $scope.scale) + y_scale_offset;
+    }
   }
 
   $scope.verify_input = function() {
@@ -302,3 +316,4 @@ function DragonController($scope, $routeParams) {
     }
   }
 }
+
