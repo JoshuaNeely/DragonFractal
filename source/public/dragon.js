@@ -149,13 +149,20 @@ function DragonController($scope, $routeParams) {
     if (!points.length || points.length < 2)
       return;
 
+    // exclude points that arent in view
+    var points_in_view = [];
+    for (point of points) {
+      if (point.x >= 0 && point.y >= 0 && point.x < canvas.width && point.y < canvas.height)
+        points_in_view.push( point );
+    }
+
     if ($scope.use_color == false) {
       ctx.strokeStyle = $scope.monocolor_color;
       ctx.beginPath();
-      ctx.moveTo(points[0].x, points[0].y);
+      ctx.moveTo(points_in_view[0].x, points_in_view[0].y);
 
-      for (var i=1; i<points.length; i++) {
-        ctx.lineTo(points[i].x, points[i].y);
+      for (var i=1; i<points_in_view.length; i++) {
+        ctx.lineTo(points_in_view[i].x, points_in_view[i].y);
       }
 
       ctx.stroke();
@@ -171,14 +178,15 @@ function DragonController($scope, $routeParams) {
 
       var segment_size = points.length/$scope.segments;
       var progress;
-      var len = points.length;
+      var len = points_in_view.length;
+      var total_len = points.length;
 
       for (var i=1.0; i<len; i++) {
         if (!$scope.continuous_gradient) {
           var simplified = Math.floor(i / segment_size) * segment_size;
-          progress = simplified / (len-1);
+          progress = simplified / (total_len-1);
         } else {
-          progress = i / (len-1);  
+          progress = i / (total_len-1);
         }
         
         var r = Math.round(color_start[0]+color_diff[0]*progress);
@@ -187,8 +195,8 @@ function DragonController($scope, $routeParams) {
         ctx.strokeStyle = rgbToHex( r,g,b );        
 
         ctx.beginPath();
-        ctx.moveTo(points[i-1].x, points[i-1].y);
-        ctx.lineTo(points[i].x, points[i].y);
+        ctx.moveTo(points_in_view[i-1].x, points_in_view[i-1].y);
+        ctx.lineTo(points_in_view[i].x, points_in_view[i].y);
         ctx.stroke();
       }
     }
