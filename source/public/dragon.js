@@ -218,7 +218,7 @@ function DragonController($scope, $routeParams) {
       var oleg_dist = Math.sqrt(osquared_dist / 2);
 
       var angle = angle_radians(p1,p2);
-      var angle_change = (3.14159/4.0);
+      var angle_change = (Math.PI/4.0);
 
       if ($scope.pattern[i%pat_len] == 1) {
         var new_angle = angle + angle_change;
@@ -299,21 +299,4 @@ function DragonController($scope, $routeParams) {
       point.y = ((point.oy + y_pan_offset) * $scope.scale) + y_scale_offset;
     }
   }
-
-  $scope.verify_input = function() {
-    var array = $scope.input_pattern.split(',');
-    var valid = true;
-
-    for (var i=0; i<array.length; i++) {
-      array[i] = parseInt( array[i] );
-      if (array[i] !== 1 && array[i] !== 0 && array[i] !== -1) {
-        valid = false;
-      }
-    }
-
-    if (valid) {
-      $scope.pattern = array;
-    }
-  }
 }
-
