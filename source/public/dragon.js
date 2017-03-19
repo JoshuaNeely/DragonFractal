@@ -145,6 +145,10 @@ function DragonController($scope, $routeParams) {
     ctx.fillRect(x1,y1, x2,y2);
   }
 
+  function on_screen(point) {
+    return (point.x >= 0 && point.y >= 0 && point.x < canvas.width && point.y < canvas.height);
+  }
+
   function redraw() {
     if (!points.length || points.length < 2)
       return;
@@ -153,7 +157,7 @@ function DragonController($scope, $routeParams) {
     var points_in_view = [];
     for (var i=0; i<points.length; i++) {
       var point = points[i];
-      if (point.x >= 0 && point.y >= 0 && point.x < canvas.width && point.y < canvas.height) {
+      if ((i==0 || on_screen(points[i-1])) || (i==points.length-1 || on_screen(points[i+1]))) {
         point.index = i;
         points_in_view.push( point );
       }
