@@ -151,9 +151,12 @@ function DragonController($scope, $routeParams) {
 
     // exclude points that arent in view
     var points_in_view = [];
-    for (point of points) {
-      if (point.x >= 0 && point.y >= 0 && point.x < canvas.width && point.y < canvas.height)
+    for (var i=0; i<points.length; i++) {
+      var point = points[i];
+      if (point.x >= 0 && point.y >= 0 && point.x < canvas.width && point.y < canvas.height) {
+        point.index = i;
         points_in_view.push( point );
+      }
     }
 
     if ($scope.use_color == false) {
@@ -183,10 +186,10 @@ function DragonController($scope, $routeParams) {
 
       for (var i=1.0; i<len; i++) {
         if (!$scope.continuous_gradient) {
-          var simplified = Math.floor(i / segment_size) * segment_size;
+          var simplified = Math.floor(points_in_view[i].index / segment_size) * segment_size;
           progress = simplified / (total_len-1);
         } else {
-          progress = i / (total_len-1);
+          progress = points_in_view[i].index / (total_len-1);
         }
         
         var r = Math.round(color_start[0]+color_diff[0]*progress);
