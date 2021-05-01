@@ -5,14 +5,7 @@
     height=700px>
   </canvas>
 
-  <div class="control_panel">
-    Iterations:
-    <input
-      type="number"
-      max=20
-      min=0
-      step=1
-      (change)="updateIterations($event.target)"
-      [value]="iterations">
-  </div>
+  <app-control-panel
+    (controlChangeOutput)="handleControlPanelChange($event)">
+  </app-control-panel>
 </div>

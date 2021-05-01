@@ -6,6 +6,7 @@ import {
   ElementRef,
 } from '@angular/core';
 
+import { ControlPanelEvent } from './control-panel/control-panel-events';
 
 class Point {
   x = 0;
@@ -25,8 +26,6 @@ class Point {
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
-  iterations = 0;
-
   @ViewChild('fractalCanvas') canvasReference !: ElementRef;
 
   ngOnInit(): void { }
@@ -35,19 +34,15 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.draw(0);
   }
 
-  updateIterations(eventTarget: any): void {
-    if (eventTarget && eventTarget.value) {
-      const newValue = eventTarget.value;
-      this.iterations = newValue;
-      this.draw(newValue);
-    }
-  }
-
   getStartingPoints(width: number, height: number): Point[] {
     return [
       new Point(width / 3, height / 2),
       new Point(2 * width / 3, height / 2),
     ];
+  }
+
+  handleControlPanelChange(event: ControlPanelEvent): void {
+    this.draw(event.iterations);
   }
 
   private iteratePoints(points: Point[], iterations: number): Point[] {
