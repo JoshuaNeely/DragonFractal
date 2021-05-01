@@ -1,10 +1,22 @@
 <div class="control_panel">
-Iterations:
-<input
-    type="number"
-    max=20
-    min=0
-    step=1
-    (change)="updateIterations($event.target)"
-    [value]="iterations">
+    <div>
+        Iterations:
+        <input
+            type="number"
+            max=20
+            min=0
+            step=1
+            (change)="updateIterations($event.target)"
+            [value]="iterations">
+    </div>
+
+    <div>
+        Pattern:
+        <input
+            type="number"
+            min=0
+            step=1
+            (change)="updatePattern($event.target)"
+            value=1>
+    </div>
 </div>

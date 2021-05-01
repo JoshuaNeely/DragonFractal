@@ -8,6 +8,7 @@ import {
 
 import { ControlPanelEvent } from './control-panel/control-panel-events';
 import { Point } from './point';
+import { Pattern } from './pattern';
 import { getStartingPoints, iteratePoints } from './fractal-logic';
 
 
@@ -21,23 +22,20 @@ export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild('fractalCanvas') canvasReference !: ElementRef;
 
   ngOnInit(): void { }
-
-  ngAfterViewInit(): void {
-    this.draw(0);
-  }
+  ngAfterViewInit(): void {}
 
   handleControlPanelChange(event: ControlPanelEvent): void {
-    this.draw(event.iterations);
+    this.draw(event.iterations, event.pattern);
   }
 
-  draw(iterations: number): void {
+  draw(iterations: number, pattern: Pattern): void {
     const canvasElement = this.canvasReference.nativeElement;
     const renderingContext = this.getRenderingContext(canvasElement);
 
     renderingContext.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
     const startingPoints = getStartingPoints(canvasElement.width, canvasElement.height);
-    const newPoints = iteratePoints(startingPoints, iterations);
+    const newPoints = iteratePoints(startingPoints, iterations, pattern);
     this.connectPoints(renderingContext, newPoints, '#000000');
   }
 

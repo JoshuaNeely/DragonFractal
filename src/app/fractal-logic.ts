@@ -1,4 +1,5 @@
 import { Point } from './point';
+import { Pattern } from './pattern';
 
 export function getStartingPoints(width: number, height: number): Point[] {
     return [
@@ -7,22 +8,21 @@ export function getStartingPoints(width: number, height: number): Point[] {
     ];
 }
 
-export function iteratePoints(points: Point[], iterations: number): Point[] {
+export function iteratePoints(points: Point[], iterations: number, pattern: Pattern): Point[] {
     let newPoints = points;
     for (let i = 0; i < iterations; i++) {
-        newPoints = iteratePointsOnce(newPoints);
+        newPoints = iteratePointsOnce(newPoints, pattern);
     }
     return newPoints;
 }
 
-function iteratePointsOnce(points: Point[]): Point[] {
+function iteratePointsOnce(points: Point[], pattern: Pattern): Point[] {
     const newPoints: Point[] = [];
 
     let firstPoint =  points[0];
     newPoints.push(firstPoint);
 
     let i = 0;
-    const pattern = [-1, 1];
 
     for (const secondPoint of points.slice(1)) {
         const xd = secondPoint.x - firstPoint.x;
