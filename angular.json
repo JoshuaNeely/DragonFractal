@@ -23,6 +23,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "baseHref" : "/dragon-fractal/",
             "outputPath": "dist/dragon-fractals",
             "index": "src/index.html",
             "main": "src/main.ts",
