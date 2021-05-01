@@ -3,11 +3,13 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { ControlPanelComponent } from './control-panel/control-panel.component';
+import { DisplayComponent } from './display/display.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ControlPanelComponent
+    ControlPanelComponent,
+    DisplayComponent
   ],
   imports: [
     BrowserModule

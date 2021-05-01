@@ -1,9 +1,6 @@
 <div class="container">
-  <canvas
-    #fractalCanvas
-    width=900px
-    height=700px>
-  </canvas>
+  <app-display #displayComponent>
+  </app-display>
 
   <app-control-panel
     (controlChangeOutput)="handleControlPanelChange($event)">
