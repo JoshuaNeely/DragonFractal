@@ -21,6 +21,10 @@ export class AppComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void { }
 
   handleControlPanelChange(event: ControlPanelEvent): void {
-    this.displayComponent.draw(event.iterations, event.pattern);
+    if (event.drawStyle == 'lines') {
+      this.displayComponent.drawLines(event.iterations, event.pattern);
+    } else {
+      this.displayComponent.drawTriangles(event.iterations, event.pattern);
+    }
   }
 }

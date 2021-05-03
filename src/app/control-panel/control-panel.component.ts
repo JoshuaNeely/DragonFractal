@@ -11,8 +11,9 @@ import { Pattern } from '../pattern';
 })
 export class ControlPanelComponent implements OnInit, AfterViewInit {
 
-  iterations = 15;
-  pattern: Pattern = [1, -1];
+  iterations = 6;
+  drawStyle: 'lines' | 'triangles' = 'lines';
+  pattern: Pattern = [1, 1, -1];
 
   @Output() controlChangeOutput = new EventEmitter<ControlPanelEvent>();
 
@@ -47,10 +48,19 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
     }
   }
 
+  updateDrawStyle(eventTarget: any): void {
+    if (eventTarget && eventTarget.value) {
+      const newValue = eventTarget.value;
+      this.drawStyle = newValue;
+      this.emitUpdates();
+    }
+  }
+
   private emitUpdates(): void {
       this.controlChangeOutput.emit({
           iterations: this.iterations,
           pattern: this.pattern,
+          drawStyle: this.drawStyle,
       });
   }
 }

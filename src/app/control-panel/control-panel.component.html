@@ -1,22 +1,43 @@
 <div class="control_panel">
-    <div>
-        Iterations:
-        <input
-            type="number"
-            max=20
-            min=0
-            step=1
-            (change)="updateIterations($event.target)"
-            [value]="iterations">
-    </div>
+    <table>
+        <tr>
+            <td>Iterations:</td>
+            <td colspan=2>
+                <input
+                    type="number"
+                    max=20
+                    min=0
+                    step=1
+                    (change)="updateIterations($event.target)"
+                    [value]="iterations">
+            </td>
+        </tr>
 
-    <div>
-        Pattern:
-        <input
-            type="number"
-            min=0
-            step=1
-            (change)="updatePattern($event.target)"
-            value=1>
-    </div>
+        <tr>
+            <td>Pattern:</td>
+            <td colspan=2>
+                <input
+                    *ngFor="let term of patternTerms"
+                    type="number"
+                    min=0
+                    step=1
+                    (change)="updatePattern($event.target)"
+                    value=1>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Draw Style:</td>
+            <td>
+                <input type="radio" id="lines" name="drawStyle" value="lines"
+                    checked
+                    (change)="updateDrawStyle($event.target)">
+                <label>Lines</label><br>
+            </td>
+            <td>
+                <input type="radio" id="triangles" name="drawStyle" value="triangles"
+                    (change)="updateDrawStyle($event.target)">
+                <label>Triangles</label><br>
+            </td>
+    </table>
 </div>
