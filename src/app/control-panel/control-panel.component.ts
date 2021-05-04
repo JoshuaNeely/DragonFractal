@@ -11,9 +11,10 @@ import { Pattern } from '../pattern';
 })
 export class ControlPanelComponent implements OnInit, AfterViewInit {
 
-  iterations = 6;
+  iterations = 12;
   drawStyle: 'lines' | 'triangles' = 'lines';
-  pattern: Pattern = [1, 1, -1];
+  humanFacingPattern = '1, 1';
+  rawPattern: Pattern = [];
 
   @Output() controlChangeOutput = new EventEmitter<ControlPanelEvent>();
 
@@ -22,6 +23,7 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
   ngOnInit(): void { }
 
   ngAfterViewInit(): void {
+    this.processPattern(this.humanFacingPattern);
     this.emitUpdates();
   }
 
@@ -33,19 +35,29 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
     }
   }
 
+
   updatePattern(eventTarget: any): void {
-    if (eventTarget && eventTarget.value) {
-      const newValue = eventTarget.value;
+    if (eventTarget && eventTarget.value
+        && eventTarget.validity.valid) {
+      const rawValue = eventTarget.value;
+      this.humanFacingPattern = rawValue;
 
-      const newPattern = [];
-      for (let i = 0; i < newValue; i++) {
-        newPattern.push(-1);
-      }
-      newPattern.push(1);
-      this.pattern = newPattern;
-
-      this.emitUpdates();
+      this.processPattern(rawValue);
     }
+  }
+
+  private processPattern(patternString: string): void {
+    const newPattern: number[] = [];
+    const onlyDigits = patternString.replace(/\D/g, '');
+    const digits = onlyDigits.split('');
+    for (const [index, digit] of digits.entries()) {
+      const term = (index % 2) ? 1 : -1;
+      for (let i = 0; i < Number(digit); i++) {
+        newPattern.push(term);
+      }
+    }
+    this.rawPattern = newPattern;
+    this.emitUpdates();
   }
 
   updateDrawStyle(eventTarget: any): void {
@@ -59,7 +71,7 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
   private emitUpdates(): void {
       this.controlChangeOutput.emit({
           iterations: this.iterations,
-          pattern: this.pattern,
+          pattern: this.rawPattern,
           drawStyle: this.drawStyle,
       });
   }

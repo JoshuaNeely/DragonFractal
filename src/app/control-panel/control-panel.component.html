@@ -17,12 +17,12 @@
             <td>Pattern:</td>
             <td colspan=2>
                 <input
-                    *ngFor="let term of patternTerms"
-                    type="number"
-                    min=0
-                    step=1
+                    id="patternString"
                     (change)="updatePattern($event.target)"
-                    value=1>
+                    [value]="humanFacingPattern"
+                    pattern="([0-9]*((,\s*)|(\s+)))*[0-9]*"
+                    title="Enter whitespace/comma separated digits"
+                    required>
             </td>
         </tr>
 
@@ -30,12 +30,13 @@
             <td>Draw Style:</td>
             <td>
                 <input type="radio" id="lines" name="drawStyle" value="lines"
-                    checked
+                    [checked]="drawStyle === 'lines'"
                     (change)="updateDrawStyle($event.target)">
                 <label>Lines</label><br>
             </td>
             <td>
                 <input type="radio" id="triangles" name="drawStyle" value="triangles"
+                    [checked]="drawStyle === 'triangles'"
                     (change)="updateDrawStyle($event.target)">
                 <label>Triangles</label><br>
             </td>
