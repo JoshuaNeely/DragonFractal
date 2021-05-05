@@ -15,6 +15,10 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
   drawStyle: 'lines' | 'triangles' = 'lines';
   humanFacingPattern = '1, 1';
   rawPattern: Pattern = [];
+  zoom = 100;
+  panX = 0;
+  panY = 0;
+  angle = 0;
 
   @Output() controlChangeOutput = new EventEmitter<ControlPanelEvent>();
 
@@ -68,11 +72,44 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
     }
   }
 
+  updateZoom(eventTarget: any): void {
+    if (eventTarget && eventTarget.value) {
+      const newValue = eventTarget.value;
+      this.zoom = newValue;
+      this.emitUpdates();
+    }
+  }
+
+  updatePanX(eventTarget: any): void {
+    if (eventTarget && eventTarget.value) {
+      this.panX = eventTarget.value;
+      this.emitUpdates();
+    }
+  }
+
+  updatePanY(eventTarget: any): void {
+    if (eventTarget && eventTarget.value) {
+      this.panY = eventTarget.value;
+      this.emitUpdates();
+    }
+  }
+
+  updateAngle(eventTarget: any): void {
+    if (eventTarget && eventTarget.value) {
+      this.angle = eventTarget.value;
+      this.emitUpdates();
+    }
+  }
+
   private emitUpdates(): void {
-      this.controlChangeOutput.emit({
-          iterations: this.iterations,
-          pattern: this.rawPattern,
-          drawStyle: this.drawStyle,
-      });
+    this.controlChangeOutput.emit({
+      iterations: this.iterations,
+      pattern: this.rawPattern,
+      drawStyle: this.drawStyle,
+      zoom: this.zoom,
+      panX: this.panX,
+      panY: this.panY,
+      angle: this.angle,
+    });
   }
 }

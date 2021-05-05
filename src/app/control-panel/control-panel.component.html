@@ -27,18 +27,47 @@
         </tr>
 
         <tr>
-            <td>Draw Style:</td>
             <td>
-                <input type="radio" id="lines" name="drawStyle" value="lines"
-                    [checked]="drawStyle === 'lines'"
-                    (change)="updateDrawStyle($event.target)">
-                <label>Lines</label><br>
+                Zoom:
+                <input
+                    class="small_input"
+                    type="number"
+                    min=50
+                    max=500
+                    step=5
+                    (change)="updateZoom($event.target)"
+                    [value]="zoom">
             </td>
+
             <td>
-                <input type="radio" id="triangles" name="drawStyle" value="triangles"
-                    [checked]="drawStyle === 'triangles'"
-                    (change)="updateDrawStyle($event.target)">
-                <label>Triangles</label><br>
+                Pan X:
+                <input
+                    class="small_input"
+                    type="number"
+                    step=5
+                    (change)="updatePanX($event.target)"
+                    [value]="panX">
             </td>
+
+            <td>
+                Pan Y:
+                <input
+                    class="small_input"
+                    type="number"
+                    step=5
+                    (change)="updatePanY($event.target)"
+                    [value]="panY">
+            </td>
+
+            <td>
+                Angle:
+                <input
+                    class="small_input"
+                    type="number"
+                    step=5
+                    (change)="updateAngle($event.target)"
+                    [value]="angle">
+            </td>
+        </tr>
     </table>
 </div>

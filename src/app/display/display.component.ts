@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 
 import { Point } from '../point';
-import { Pattern } from '../pattern';
 import { getStartingPoints, iteratePoints } from '../fractal-logic';
+import { ControlPanelEvent } from '../control-panel/control-panel-events';
 
 @Component({
   selector: 'app-display',
@@ -24,78 +24,85 @@ export class DisplayComponent implements OnInit, AfterViewInit {
   ngOnInit(): void { }
   ngAfterViewInit(): void {}
 
-  drawLines(iterations: number, pattern: Pattern): void {
+  drawLines(event: ControlPanelEvent): void {
     const canvasElement = this.canvasReference.nativeElement;
     const renderingContext = this.getRenderingContext(canvasElement);
+    const canvasWidth = canvasElement.width;
+    const canvasHeight = canvasElement.height;
 
-    renderingContext.clearRect(0, 0, canvasElement.width, canvasElement.height);
+    renderingContext.clearRect(0, 0, canvasWidth, canvasHeight);
 
-    const startingPoints = getStartingPoints(canvasElement.width, canvasElement.height);
-    const newPoints = iteratePoints(startingPoints, iterations, pattern);
-    this.connectPoints(renderingContext, newPoints, this.lineColor);
+    const startingPoints = getStartingPoints(canvasWidth, canvasHeight);
+    const newPoints = iteratePoints(startingPoints, event.iterations, event.pattern);
+    const path = this.connectPoints(newPoints);
+    const transformedPath = this.transformPath(path, event, canvasWidth, canvasHeight);
+
+    renderingContext.lineWidth = 1.5;
+    renderingContext.strokeStyle = this.lineColor;
+    renderingContext.stroke(transformedPath);
   }
 
-  drawTriangles(iterations: number, pattern: Pattern): void {
-    const canvasElement = this.canvasReference.nativeElement;
-    const renderingContext = this.getRenderingContext(canvasElement);
-
-    renderingContext.clearRect(0, 0, canvasElement.width, canvasElement.height);
-
-    const startingPoints = getStartingPoints(canvasElement.width, canvasElement.height);
-    const newPoints = iteratePoints(startingPoints, iterations, pattern);
-    this.pointsToTriangles(renderingContext, newPoints, this.lineColor);
-  }
-
-  private connectPoints(
-    renderingContext: CanvasRenderingContext2D,
-    points: Point[],
-    color: string
-  ): void {
-    const borderWidth = 1.5;
-
-    renderingContext.lineWidth = borderWidth;
-    renderingContext.strokeStyle = color;
+  private connectPoints(points: Point[]): Path2D {
+    const path = new Path2D();
 
     const p1 = points[0];
-    renderingContext.beginPath();
-    renderingContext.moveTo(p1.x, p1.y);
+    path.moveTo(p1.x, p1.y);
 
     for (const point of points.slice(1)) {
-      renderingContext.lineTo(point.x, point.y);
+      path.lineTo(point.x, point.y);
     }
-    renderingContext.stroke();
+
+    return path;
   }
 
-  private pointsToTriangles(
-    renderingContext: CanvasRenderingContext2D,
-    points: Point[],
-    color: string
-  ): void {
-    if (points.length > 2) {
-      const borderWidth = 1.5;
+  private transformPath(path: Path2D, event: ControlPanelEvent, canvasWidth: number, canvasHeight: number): Path2D {
+    const zoomRatio = event.zoom / 100;
+    const angle = event.angle;
+    const translateX = event.panX;
+    const translateY = event.panY;
 
-      renderingContext.lineWidth = borderWidth;
-      renderingContext.strokeStyle = color;
-      renderingContext.fillStyle = color;
+    const rotationMatrix = new DOMMatrix().rotate(angle);
+    const translationMatrix = new DOMMatrix().translate(translateX, translateY);
+    const scaleMatrix = new DOMMatrix().scale(zoomRatio);
 
-      const p1 = points[0];
-      renderingContext.beginPath();
-      renderingContext.moveTo(p1.x, p1.y);
+    path = this.applyTransformOverCenterScreen(path, [
+      rotationMatrix,
+      scaleMatrix,
+      translationMatrix
+    ]);
+    return path;
+  }
 
-      let count = 1;
-      for (const point of points.slice(1)) {
-        renderingContext.lineTo(point.x, point.y);
-        if (count % 2 === 0) {
-          renderingContext.closePath();
-          renderingContext.fill();
-          renderingContext.moveTo(point.x, point.y);
-        }
-        count += 1;
-      }
+  private applyTransform(path: Path2D, transform: DOMMatrix): Path2D {
+    const newPath = new Path2D();
+    newPath.addPath(path, transform);
+    return newPath;
+  }
+
+  private applyIndependantTransformations(path: Path2D, transformations: DOMMatrix[]): Path2D {
+    for (const transformation of transformations) {
+      path = this.applyTransform(path, transformation);
     }
-    else {
-      this.connectPoints(renderingContext, points, color);
-    }
+    return path;
+  }
+
+  private applyTransformOverCenterScreen(path: Path2D, transformations: DOMMatrix[]): Path2D {
+    const canvasElement = this.canvasReference.nativeElement;
+    const canvasWidth = canvasElement.width;
+    const canvasHeight = canvasElement.height;
+
+    const drawingCenter = [canvasWidth / 2, canvasHeight /2];
+    const translationToOrigin = new DOMMatrix()
+      .translate(-drawingCenter[0], -drawingCenter[1]);
+
+    const translationFromOrigin = new DOMMatrix()
+      .translate(drawingCenter[0], drawingCenter[1]);
+
+    return this.applyIndependantTransformations(path, [
+      translationToOrigin,
+      ...transformations,
+      translationFromOrigin
+    ]);
   }
 
   private getRenderingContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
