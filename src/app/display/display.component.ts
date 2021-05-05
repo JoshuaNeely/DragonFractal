@@ -51,6 +51,7 @@ export class DisplayComponent implements OnInit, AfterViewInit {
 
     this.renderingContext.translate(displayCenter[0], displayCenter[1]);
 
+    this.renderingContext.lineWidth = 1.5 / zoomRatio;
     this.renderingContext.scale(zoomRatio, zoomRatio);
     this.renderingContext.rotate(angleRadians);
     this.renderingContext.translate(event.panX, event.panY);
