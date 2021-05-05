@@ -20,7 +20,11 @@ export class AppComponent implements OnInit, AfterViewInit {
   ngOnInit(): void { }
   ngAfterViewInit(): void { }
 
-  handleControlPanelChange(event: ControlPanelEvent): void {
-      this.displayComponent.drawLines(event);
+  handleFractalUpdate(event: ControlPanelEvent): void {
+      this.displayComponent.updateFractal(event);
+  }
+
+  handleTransformationsUpdate(event: ControlPanelEvent): void {
+      this.displayComponent.updateTransformations(event);
   }
 }

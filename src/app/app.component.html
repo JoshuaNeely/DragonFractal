@@ -3,6 +3,7 @@
   </app-display>
 
   <app-control-panel
-    (controlChangeOutput)="handleControlPanelChange($event)">
+    (fractalUpdate)="handleFractalUpdate($event)"
+    (transformationsUpdate)="handleTransformationsUpdate($event)">
   </app-control-panel>
 </div>

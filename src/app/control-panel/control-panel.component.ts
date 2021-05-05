@@ -12,7 +12,6 @@ import { Pattern } from '../pattern';
 export class ControlPanelComponent implements OnInit, AfterViewInit {
 
   iterations = 12;
-  drawStyle: 'lines' | 'triangles' = 'lines';
   humanFacingPattern = '1, 1';
   rawPattern: Pattern = [];
   zoom = 100;
@@ -20,7 +19,8 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
   panY = 0;
   angle = 0;
 
-  @Output() controlChangeOutput = new EventEmitter<ControlPanelEvent>();
+  @Output() fractalUpdate = new EventEmitter<ControlPanelEvent>();
+  @Output() transformationsUpdate = new EventEmitter<ControlPanelEvent>();
 
   constructor() { }
 
@@ -38,7 +38,6 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
       this.emitUpdates();
     }
   }
-
 
   updatePattern(eventTarget: any): void {
     if (eventTarget && eventTarget.value
@@ -61,51 +60,64 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
       }
     }
     this.rawPattern = newPattern;
-    this.emitUpdates();
-  }
-
-  updateDrawStyle(eventTarget: any): void {
-    if (eventTarget && eventTarget.value) {
-      const newValue = eventTarget.value;
-      this.drawStyle = newValue;
-      this.emitUpdates();
-    }
+    this.emitFractalUpdates();
   }
 
   updateZoom(eventTarget: any): void {
     if (eventTarget && eventTarget.value) {
       const newValue = eventTarget.value;
       this.zoom = newValue;
-      this.emitUpdates();
+      this.emitTransformationUpdates();
     }
   }
 
   updatePanX(eventTarget: any): void {
     if (eventTarget && eventTarget.value) {
       this.panX = eventTarget.value;
-      this.emitUpdates();
+      this.emitTransformationUpdates();
     }
   }
 
   updatePanY(eventTarget: any): void {
     if (eventTarget && eventTarget.value) {
       this.panY = eventTarget.value;
-      this.emitUpdates();
+      this.emitTransformationUpdates();
     }
   }
 
   updateAngle(eventTarget: any): void {
     if (eventTarget && eventTarget.value) {
       this.angle = eventTarget.value;
-      this.emitUpdates();
+      this.emitTransformationUpdates();
     }
   }
 
   private emitUpdates(): void {
-    this.controlChangeOutput.emit({
+    this.fractalUpdate.emit({
       iterations: this.iterations,
       pattern: this.rawPattern,
-      drawStyle: this.drawStyle,
+      zoom: this.zoom,
+      panX: this.panX,
+      panY: this.panY,
+      angle: this.angle,
+    });
+  }
+
+  private emitFractalUpdates(): void {
+    this.fractalUpdate.emit({
+      iterations: this.iterations,
+      pattern: this.rawPattern,
+      zoom: this.zoom,
+      panX: this.panX,
+      panY: this.panY,
+      angle: this.angle,
+    });
+  }
+
+  private emitTransformationUpdates(): void {
+    this.transformationsUpdate.emit({
+      iterations: this.iterations,
+      pattern: this.rawPattern,
       zoom: this.zoom,
       panX: this.panX,
       panY: this.panY,

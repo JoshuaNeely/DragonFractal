@@ -18,28 +18,58 @@ import { ControlPanelEvent } from '../control-panel/control-panel-events';
 export class DisplayComponent implements OnInit, AfterViewInit {
 
   lineColor = '#aaaaaa';
+  width = 0;
+  height = 0;
+  path = new Path2D();
+  canvas !: HTMLCanvasElement;
+  renderingContext !: CanvasRenderingContext2D;
 
   @ViewChild('fractalCanvas') canvasReference !: ElementRef;
 
   ngOnInit(): void { }
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.canvas = this.canvasReference.nativeElement;
+    this.width = this.canvas.width;
+    this.height = this.canvas.height;
 
-  drawLines(event: ControlPanelEvent): void {
-    const canvasElement = this.canvasReference.nativeElement;
-    const renderingContext = this.getRenderingContext(canvasElement);
-    const canvasWidth = canvasElement.width;
-    const canvasHeight = canvasElement.height;
+    this.renderingContext = this.getRenderingContext(this.canvas);
+    this.renderingContext.lineWidth = 1.5;
+    this.renderingContext.strokeStyle = this.lineColor;
+  }
 
-    renderingContext.clearRect(0, 0, canvasWidth, canvasHeight);
+  updateTransformations(event: ControlPanelEvent): void {
+    this.renderingContext.save();
+    this.applyTransformations(event);
+    this.redraw();
+    this.renderingContext.restore();
+  }
 
-    const startingPoints = getStartingPoints(canvasWidth, canvasHeight);
+  private applyTransformations(event: ControlPanelEvent): void {
+    const zoomRatio = event.zoom / 100;
+    const angleRadians = event.angle / 180 * Math.PI;
+    const displayCenter = [this.canvas.width / 2, this.canvas.height / 2];
+
+    this.renderingContext.translate(displayCenter[0], displayCenter[1]);
+
+    this.renderingContext.scale(zoomRatio, zoomRatio);
+    this.renderingContext.rotate(angleRadians);
+    this.renderingContext.translate(event.panX, event.panY);
+
+    this.renderingContext.translate(-displayCenter[0], -displayCenter[1]);
+
+  }
+
+  updateFractal(event: ControlPanelEvent): void {
+    const startingPoints = getStartingPoints(this.width, this.height);
     const newPoints = iteratePoints(startingPoints, event.iterations, event.pattern);
-    const path = this.connectPoints(newPoints);
-    const transformedPath = this.transformPath(path, event, canvasWidth, canvasHeight);
+    this.path = this.connectPoints(newPoints);
 
-    renderingContext.lineWidth = 1.5;
-    renderingContext.strokeStyle = this.lineColor;
-    renderingContext.stroke(transformedPath);
+    this.updateTransformations(event);
+  }
+
+  redraw(): void {
+    this.renderingContext.clearRect(0, 0, this.width, this.height);
+    this.renderingContext.stroke(this.path);
   }
 
   private connectPoints(points: Point[]): Path2D {
@@ -53,56 +83,6 @@ export class DisplayComponent implements OnInit, AfterViewInit {
     }
 
     return path;
-  }
-
-  private transformPath(path: Path2D, event: ControlPanelEvent, canvasWidth: number, canvasHeight: number): Path2D {
-    const zoomRatio = event.zoom / 100;
-    const angle = event.angle;
-    const translateX = event.panX;
-    const translateY = event.panY;
-
-    const rotationMatrix = new DOMMatrix().rotate(angle);
-    const translationMatrix = new DOMMatrix().translate(translateX, translateY);
-    const scaleMatrix = new DOMMatrix().scale(zoomRatio);
-
-    path = this.applyTransformOverCenterScreen(path, [
-      rotationMatrix,
-      scaleMatrix,
-      translationMatrix
-    ]);
-    return path;
-  }
-
-  private applyTransform(path: Path2D, transform: DOMMatrix): Path2D {
-    const newPath = new Path2D();
-    newPath.addPath(path, transform);
-    return newPath;
-  }
-
-  private applyIndependantTransformations(path: Path2D, transformations: DOMMatrix[]): Path2D {
-    for (const transformation of transformations) {
-      path = this.applyTransform(path, transformation);
-    }
-    return path;
-  }
-
-  private applyTransformOverCenterScreen(path: Path2D, transformations: DOMMatrix[]): Path2D {
-    const canvasElement = this.canvasReference.nativeElement;
-    const canvasWidth = canvasElement.width;
-    const canvasHeight = canvasElement.height;
-
-    const drawingCenter = [canvasWidth / 2, canvasHeight /2];
-    const translationToOrigin = new DOMMatrix()
-      .translate(-drawingCenter[0], -drawingCenter[1]);
-
-    const translationFromOrigin = new DOMMatrix()
-      .translate(drawingCenter[0], drawingCenter[1]);
-
-    return this.applyIndependantTransformations(path, [
-      translationToOrigin,
-      ...transformations,
-      translationFromOrigin
-    ]);
   }
 
   private getRenderingContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
