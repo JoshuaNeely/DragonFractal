@@ -61,7 +61,7 @@ export class DisplayComponent implements OnInit, AfterViewInit {
   }
 
   updateFractal(event: ControlPanelEvent): void {
-    const startingPoints = getStartingPoints(this.width, this.height);
+    const startingPoints = getStartingPoints(this.width, this.height, 'line');
     const newPoints = iteratePoints(startingPoints, event.iterations, event.pattern);
     this.path = this.connectPoints(newPoints);
 

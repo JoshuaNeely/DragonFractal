@@ -1,11 +1,31 @@
 import { Point } from './point';
 import { Pattern } from './pattern';
 
-export function getStartingPoints(width: number, height: number): Point[] {
-    return [
-        new Point(width / 3, height / 2),
-        new Point(2 * width / 3, height / 2),
-    ];
+export type Shape = 'line' | 'square';
+
+export function getStartingPoints(width: number, height: number, selection: Shape): Point[] {
+    switch (selection) {
+        case 'line':
+            return [
+                new Point(width / 3, height / 2),
+                new Point(2 * width / 3, height / 2),
+            ];
+
+        case 'square':
+            return [
+                new Point(width / 3, height / 3),
+                new Point(2 * width / 3, height / 3),
+                new Point(2 * width / 3, 2 * height / 3),
+                new Point(width / 3, 2 * height / 3),
+                new Point(width / 3, height / 3),
+            ];
+
+        default:
+            return [
+                new Point(width / 3, height / 2),
+                new Point(2 * width / 3, height / 2),
+            ];
+    }
 }
 
 export function iteratePoints(points: Point[], iterations: number, pattern: Pattern): Point[] {
