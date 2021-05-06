@@ -29,6 +29,13 @@ export class DisplayComponent implements OnInit, AfterViewInit {
   ngOnInit(): void { }
   ngAfterViewInit(): void {
     this.canvas = this.canvasReference.nativeElement;
+
+    // division by two seems to clean up some visual artifacts... css scales up the image anyway.
+    // Unknown how canvas siave might affect performance of drawing functions.
+    // The underlying geometric data is the same - that is the expensive part.
+    this.canvas.width = window.innerWidth/2;
+    this.canvas.height = window.innerHeight/2;
+
     this.width = this.canvas.width;
     this.height = this.canvas.height;
 
