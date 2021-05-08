@@ -71,20 +71,18 @@
         </tr>
 
         <tr>
-            <td>
-                Colorize:
+            <td colspan="100%">
+                Colors:
                 <input
-                    type="checkbox"
                     (change)="updateColor($event.target)"
-                    [value]="useColor">
+                    [value]="humanFacingColors">
             </td>
-
         <tr>
             <td>
                 <button (click)="exportToUrl()">Export</button>
             </td>
             <td colspan="100%">
-                <p>Write current settings to URL for easy sharing</p>
+                <p>Save current settings to URL</p>
             </td>
     </table>
 </div>

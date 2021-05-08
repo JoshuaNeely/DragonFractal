@@ -12,6 +12,8 @@ import { Pattern } from '../pattern';
 export class ControlPanelComponent implements OnInit, AfterViewInit {
 
   useColor = false;
+  humanFacingColors = 'blue green';
+  colors: string[] = [];
   iterations = 12;
   humanFacingPattern = '1 1';
   rawPattern: Pattern = [];
@@ -31,6 +33,7 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.processPattern(this.humanFacingPattern);
+    this.processColorInput();
     this.emitFractalUpdates();
   }
 
@@ -42,6 +45,7 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
     queryParams.set('angle', `${this.angle}`);
     queryParams.set('iterations', `${this.iterations}`);
     queryParams.set('pattern', `${this.humanFacingPattern}`);
+    queryParams.set('colors', `${this.humanFacingColors}`);
     location.href = '?' + queryParams.toString();
   }
 
@@ -52,6 +56,7 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
     this.angle = this.getNumericQueryParam('angle', this.angle);
     this.iterations = this.getNumericQueryParam('iterations', this.iterations);
     this.humanFacingPattern = this.getStringQueryParam('pattern', this.humanFacingPattern);
+    this.humanFacingColors = this.getStringQueryParam('colors', this.humanFacingColors);
   }
 
   private getNumericQueryParam(paramName: string, defaultVal: number): number {
@@ -133,8 +138,19 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
   updateColor(eventTarget: any): void {
     if (eventTarget) {
       this.useColor = eventTarget.checked;
-      this.emitFractalUpdates();
+      this.humanFacingColors = eventTarget.value;
+      this.processColorInput();
     }
+  }
+
+  private processColorInput(): void {
+    const colorsString = this.humanFacingColors;
+    const colors = colorsString.split(' ');
+    // some validation here...?
+    // Turns out canvas.strokeStyle kinda does this automatically.
+    // It's not user-facing feedback, but invalid colors won't break it.
+    this.colors = colors;
+    this.emitFractalUpdates();
   }
 
   private emitFractalUpdates(): void {
@@ -145,7 +161,7 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
       panX: this.panX,
       panY: this.panY,
       angle: this.angle,
-      color: this.useColor ? 'blue' : '',
+      colors: this.colors,
     });
   }
 
@@ -157,7 +173,7 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
       panX: this.panX,
       panY: this.panY,
       angle: this.angle,
-      color: this.useColor ? 'blue' : '',
+      colors: this.colors,
     });
   }
 }

@@ -7,5 +7,5 @@ export interface ControlPanelEvent {
   panX: number;
   panY: number;
   angle: number;
-  color: string;
+  colors: string[];
 }

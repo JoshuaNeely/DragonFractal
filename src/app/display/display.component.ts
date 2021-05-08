@@ -96,12 +96,8 @@ export class DisplayComponent implements OnInit, AfterViewInit {
   }
 
   private getNextColor(event: ControlPanelEvent, pointIndex: number, totalPoints: number): string {
-    const color1 = 'red';
-    const color2 = '#00FF';
-    const color3 = 'yellow';
-    const color4 = 'white';
+    const colors = event.colors;
 
-    const colors = [color1, color2, color3, color4];
     const pointProgress = pointIndex / totalPoints;
     const colorIndex = Math.floor(pointProgress * colors.length);
 
