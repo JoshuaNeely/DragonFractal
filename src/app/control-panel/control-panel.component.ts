@@ -11,6 +11,7 @@ import { Pattern } from '../pattern';
 })
 export class ControlPanelComponent implements OnInit, AfterViewInit {
 
+  useColor = false;
   iterations = 12;
   humanFacingPattern = '1 1';
   rawPattern: Pattern = [];
@@ -30,7 +31,7 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.processPattern(this.humanFacingPattern);
-    this.emitUpdates();
+    this.emitFractalUpdates();
   }
 
   exportToUrl(): void {
@@ -72,7 +73,7 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
     if (eventTarget && eventTarget.value) {
       const newValue = eventTarget.value;
       this.iterations = newValue;
-      this.emitUpdates();
+      this.emitFractalUpdates();
     }
   }
 
@@ -129,15 +130,11 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private emitUpdates(): void {
-    this.fractalUpdate.emit({
-      iterations: this.iterations,
-      pattern: this.rawPattern,
-      zoom: this.zoom,
-      panX: this.panX,
-      panY: this.panY,
-      angle: this.angle,
-    });
+  updateColor(eventTarget: any): void {
+    if (eventTarget) {
+      this.useColor = eventTarget.checked;
+      this.emitFractalUpdates();
+    }
   }
 
   private emitFractalUpdates(): void {
@@ -148,6 +145,7 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
       panX: this.panX,
       panY: this.panY,
       angle: this.angle,
+      color: this.useColor ? 'blue' : '',
     });
   }
 
@@ -159,6 +157,7 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
       panX: this.panX,
       panY: this.panY,
       angle: this.angle,
+      color: this.useColor ? 'blue' : '',
     });
   }
 }

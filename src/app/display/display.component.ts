@@ -20,7 +20,7 @@ export class DisplayComponent implements OnInit, AfterViewInit {
   lineColor = '#aaaaaa';
   width = 0;
   height = 0;
-  path = new Path2D();
+  points: Point[] = [];
   canvas !: HTMLCanvasElement;
   renderingContext !: CanvasRenderingContext2D;
 
@@ -47,7 +47,7 @@ export class DisplayComponent implements OnInit, AfterViewInit {
   updateTransformations(event: ControlPanelEvent): void {
     this.renderingContext.save();
     this.applyTransformations(event);
-    this.redraw();
+    this.redraw(event);
     this.renderingContext.restore();
   }
 
@@ -64,33 +64,48 @@ export class DisplayComponent implements OnInit, AfterViewInit {
     this.renderingContext.translate(event.panX, event.panY);
 
     this.renderingContext.translate(-displayCenter[0], -displayCenter[1]);
-
   }
 
   updateFractal(event: ControlPanelEvent): void {
     const startingPoints = getStartingPoints(this.width, this.height, 'line');
-    const newPoints = iteratePoints(startingPoints, event.iterations, event.pattern);
-    this.path = this.connectPoints(newPoints);
-
+    this.points = iteratePoints(startingPoints, event.iterations, event.pattern);
     this.updateTransformations(event);
   }
 
-  redraw(): void {
-    this.renderingContext.clearRect(0, 0, this.width, this.height);
-    this.renderingContext.stroke(this.path);
+  redraw(event: ControlPanelEvent): void {
+    this.renderingContext.clearRect(-event.panX, -event.panY, this.width, this.height);
+    this.drawPoints(this.points, event);
   }
 
-  private connectPoints(points: Point[]): Path2D {
-    const path = new Path2D();
-
+  private drawPoints(points: Point[], event: ControlPanelEvent): void {
     const p1 = points[0];
-    path.moveTo(p1.x, p1.y);
 
-    for (const point of points.slice(1)) {
-      path.lineTo(point.x, point.y);
-    }
+    this.renderingContext.beginPath();
+    this.renderingContext.moveTo(p1.x, p1.y);
+    this.renderingContext.strokeStyle = this.lineColor;
 
-    return path;
+    const remainingPoints = points.slice(1);
+    remainingPoints.forEach((point, index) => {
+      const nextColor = this.getNextColor(event, index, remainingPoints.length);
+      this.renderingContext.strokeStyle = nextColor;
+      this.renderingContext.lineTo(point.x, point.y);
+      this.renderingContext.stroke();
+      this.renderingContext.beginPath();
+      this.renderingContext.moveTo(point.x, point.y);
+    });
+  }
+
+  private getNextColor(event: ControlPanelEvent, pointIndex: number, totalPoints: number): string {
+    const color1 = 'red';
+    const color2 = '#00FF';
+    const color3 = 'yellow';
+    const color4 = 'white';
+
+    const colors = [color1, color2, color3, color4];
+    const pointProgress = pointIndex / totalPoints;
+    const colorIndex = Math.floor(pointProgress * colors.length);
+
+    return colors[colorIndex];
   }
 
   private getRenderingContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {

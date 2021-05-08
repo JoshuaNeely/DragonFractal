@@ -5,7 +5,7 @@
             <td colspan=2>
                 <input
                     type="number"
-                    max=20
+                    max=15
                     min=0
                     step=1
                     (change)="updateIterations($event.target)"
@@ -69,6 +69,15 @@
                     [value]="angle">
             </td>
         </tr>
+
+        <tr>
+            <td>
+                Colorize:
+                <input
+                    type="checkbox"
+                    (change)="updateColor($event.target)"
+                    [value]="useColor">
+            </td>
 
         <tr>
             <td>
