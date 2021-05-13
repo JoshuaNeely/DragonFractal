@@ -8,8 +8,8 @@
 
     <table *ngIf="interactive">
         <tr>
-            <td>Iterations:</td>
-            <td colspan=2>
+            <td colspan="100%">
+                Iterations
                 <input
                     type="number"
                     max=15
@@ -21,8 +21,20 @@
         </tr>
 
         <tr>
-            <td>Pattern:</td>
-            <td colspan=2>
+            <td colspan="100%">
+                Colors:
+                <input
+                    (change)="updateColor($event.target)"
+                    [value]="humanFacingColors">
+            </td>
+            <td>
+                Space delimited css color codes. Eg "red #f0f #ee88aabb"
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="100%">
+                Pattern:
                 <input
                     id="patternString"
                     (change)="updatePattern($event.target)"
@@ -30,12 +42,14 @@
                     pattern="([0-9]*((,\s*)|(\s+)))*[0-9]*"
                     title="Enter whitespace/comma separated digits"
                     required>
+            </td>
+            <td>
                 Space delimited digits defining how many segments break in one direction before alternating. See <a href="https://joshua-neely.com/dragon-fractals.html#orge221233">Fractal Explaination</a>
             </td>
         </tr>
 
         <tr>
-            <td>
+            <td colspan="100%">
                 Zoom:
                 <input
                     class="small_input"
@@ -45,9 +59,7 @@
                     step=5
                     (change)="updateZoom($event.target)"
                     [value]="zoom">
-            </td>
 
-            <td>
                 Pan X:
                 <input
                     class="small_input"
@@ -55,9 +67,7 @@
                     step=1
                     (change)="updatePanX($event.target)"
                     [value]="panX">
-            </td>
 
-            <td>
                 Pan Y:
                 <input
                     class="small_input"
@@ -65,9 +75,7 @@
                     step=1
                     (change)="updatePanY($event.target)"
                     [value]="panY">
-            </td>
 
-            <td>
                 Angle:
                 <input
                     class="small_input"
@@ -79,20 +87,10 @@
         </tr>
 
         <tr>
-            <td colspan="100%">
-                Colors:
-                <input
-                    (change)="updateColor($event.target)"
-                    [value]="humanFacingColors">
-                Space delimited css color codes. Eg "red #f0f #ee88aabb"
-            </td>
-        <tr>
-            <td colspan=2>
+            <td>
                 <button (click)="resetParameters()">Restore default configuration</button>
-            </td>
-
-            <td colspan="100%">
                 <button (click)="exportToUrl()">Save current settings to URL</button>
             </td>
+        </tr>
     </table>
 </div>
