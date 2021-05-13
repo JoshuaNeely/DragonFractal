@@ -30,6 +30,7 @@
                     pattern="([0-9]*((,\s*)|(\s+)))*[0-9]*"
                     title="Enter whitespace/comma separated digits"
                     required>
+                Space delimited digits defining how many segments break in one direction before alternating. See <a href="https://joshua-neely.com/dragon-fractals.html#orge221233">Fractal Explaination</a>
             </td>
         </tr>
 
@@ -83,6 +84,7 @@
                 <input
                     (change)="updateColor($event.target)"
                     [value]="humanFacingColors">
+                Space delimited css color codes. Eg "red #f0f #ee88aabb"
             </td>
         <tr>
             <td colspan=2>
