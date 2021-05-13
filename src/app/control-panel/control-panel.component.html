@@ -85,11 +85,12 @@
                     [value]="humanFacingColors">
             </td>
         <tr>
-            <td>
-                <button (click)="exportToUrl()">Export</button>
+            <td colspan=2>
+                <button (click)="resetParameters()">Restore default configuration</button>
             </td>
+
             <td colspan="100%">
-                <p>Save current settings to URL</p>
+                <button (click)="exportToUrl()">Save current settings to URL</button>
             </td>
     </table>
 </div>

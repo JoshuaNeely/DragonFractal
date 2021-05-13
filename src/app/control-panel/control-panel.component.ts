@@ -53,6 +53,10 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
     this.interactive = !this.interactive;
   }
 
+  resetParameters(): void {
+    location.href = '';
+  }
+
   private loadFromUrl(): void {
     this.zoom = this.getNumericQueryParam('zoom', this.zoom);
     this.panX = this.getNumericQueryParam('panx', this.panX);
