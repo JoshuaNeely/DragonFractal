@@ -33,8 +33,8 @@ export class DisplayComponent implements OnInit, AfterViewInit {
     // division by two seems to clean up some visual artifacts... css scales up the image anyway.
     // Unknown how canvas siave might affect performance of drawing functions.
     // The underlying geometric data is the same - that is the expensive part.
-    this.canvas.width = window.innerWidth/2;
-    this.canvas.height = window.innerHeight/2;
+    this.canvas.width = window.innerWidth / 2;
+    this.canvas.height = window.innerHeight / 2;
 
     this.width = this.canvas.width;
     this.height = this.canvas.height;
@@ -56,12 +56,15 @@ export class DisplayComponent implements OnInit, AfterViewInit {
     const angleRadians = event.angle / 180 * Math.PI;
     const displayCenter = [this.canvas.width / 2, this.canvas.height / 2];
 
+    const panXPixels = (event.panX / 100) * this.canvas.width;
+    const panYPixels = (event.panY / 100) * this.canvas.height;
+
     this.renderingContext.translate(displayCenter[0], displayCenter[1]);
 
     this.renderingContext.lineWidth = 1.5 / zoomRatio;
     this.renderingContext.scale(zoomRatio, zoomRatio);
     this.renderingContext.rotate(angleRadians);
-    this.renderingContext.translate(event.panX, event.panY);
+    this.renderingContext.translate(panXPixels, panYPixels);
 
     this.renderingContext.translate(-displayCenter[0], -displayCenter[1]);
   }
@@ -73,7 +76,9 @@ export class DisplayComponent implements OnInit, AfterViewInit {
   }
 
   redraw(event: ControlPanelEvent): void {
-    this.renderingContext.clearRect(-event.panX, -event.panY, this.width, this.height);
+    const panXPixels = (event.panX/100) * this.canvas.width;
+    const panYPixels = (event.panY/100) * this.canvas.height;
+    this.renderingContext.clearRect(-panXPixels, -panYPixels, this.width, this.height);
     this.drawPoints(this.points, event);
   }
 
