@@ -3,7 +3,6 @@ import { Component, OnInit, AfterViewInit, Output, EventEmitter } from '@angular
 import { ControlPanelEvent } from './control-panel-events';
 import { Pattern } from '../pattern';
 
-
 @Component({
   selector: 'app-control-panel',
   templateUrl: './control-panel.component.html',
@@ -11,7 +10,6 @@ import { Pattern } from '../pattern';
 })
 export class ControlPanelComponent implements OnInit, AfterViewInit {
 
-  useColor = false;
   humanFacingColors = 'blue green';
   colors: string[] = [];
   iterations = 12;
@@ -21,6 +19,8 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
   panX = 0;
   panY = 0;
   angle = 0;
+
+  interactive = true;
 
   @Output() fractalUpdate = new EventEmitter<ControlPanelEvent>();
   @Output() transformationsUpdate = new EventEmitter<ControlPanelEvent>();
@@ -57,6 +57,7 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
     this.iterations = this.getNumericQueryParam('iterations', this.iterations);
     this.humanFacingPattern = this.getStringQueryParam('pattern', this.humanFacingPattern);
     this.humanFacingColors = this.getStringQueryParam('colors', this.humanFacingColors);
+    this.interactive = this.getBooleanQueryParam('interactive', true);
   }
 
   private getNumericQueryParam(paramName: string, defaultVal: number): number {
@@ -72,6 +73,12 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
     const stringVal = queryParams.get(paramName) || defaultVal;
     const returnedVal = (typeof stringVal === 'string') ? stringVal : defaultVal;
     return returnedVal;
+  }
+
+  private getBooleanQueryParam(paramName: string, defaultVal: boolean): boolean {
+    const queryParams = new URLSearchParams(location.search);
+    const stringVal = queryParams.get(paramName) || defaultVal;
+    return !(stringVal === 'false');
   }
 
   updateIterations(eventTarget: any): void {
@@ -137,7 +144,6 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
 
   updateColor(eventTarget: any): void {
     if (eventTarget) {
-      this.useColor = eventTarget.checked;
       this.humanFacingColors = eventTarget.value;
       this.processColorInput();
     }
