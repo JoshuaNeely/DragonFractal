@@ -1,4 +1,11 @@
 <div class="control_panel">
+    <div class="expansion-button-panel">
+        <button
+            (click)="toggleInteractive()">
+            {{interactive ? "hide control panel" : "expand control panel"}}
+        </button>
+    </div>
+
     <table *ngIf="interactive">
         <tr>
             <td>Iterations:</td>
@@ -44,7 +51,7 @@
                 <input
                     class="small_input"
                     type="number"
-                    step=5
+                    step=1
                     (change)="updatePanX($event.target)"
                     [value]="panX">
             </td>
@@ -54,7 +61,7 @@
                 <input
                     class="small_input"
                     type="number"
-                    step=5
+                    step=1
                     (change)="updatePanY($event.target)"
                     [value]="panY">
             </td>
