@@ -1,0 +1,110 @@
+<div class="control_panel">
+    <div class="expansion-button-panel">
+        <button
+            (click)="toggleInteractive()">
+            {{interactive ? "hide control panel" : "expand control panel"}}
+        </button>
+    </div>
+
+    <table *ngIf="interactive">
+        <tr>
+            <td>
+                Iterations
+                <input
+                    type="number"
+                    max=15
+                    min=0
+                    step=1
+                    (change)="updateIterations($event.target)"
+                    [value]="iterations">
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="100%">
+                Animation
+                <input
+                    (change)="updateAnimation($event.target)"
+                    [value]="animation">
+
+                <button (click)="this.animation = '0'; processAnimation()">Stop Animation</button>
+            </td>
+            <td>
+                "[fps] [start] [stop] [bounce-animation]"
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="100%">
+                Colors:
+                <input
+                    (change)="updateColor($event.target)"
+                    [value]="humanFacingColors">
+            </td>
+            <td>
+                Space delimited css color codes. Eg "red #f0f #ee88aabb"
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="100%">
+                Pattern:
+                <input
+                    id="patternString"
+                    (change)="updatePattern($event.target)"
+                    [value]="humanFacingPattern"
+                    pattern="([0-9]*((,\s*)|(\s+)))*[0-9]*"
+                    title="Enter whitespace/comma separated digits"
+                    required>
+            </td>
+            <td>
+                Space delimited digits defining how many segments break in one direction before alternating. See <a href="https://joshua-neely.com/dragon-fractals.html#orge221233">Fractal Explaination</a>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="100%">
+                Zoom:
+                <input
+                    class="small_input"
+                    type="number"
+                    min=50
+                    max=500
+                    step=5
+                    (change)="updateZoom($event.target)"
+                    [value]="zoom">
+
+                Pan X:
+                <input
+                    class="small_input"
+                    type="number"
+                    step=1
+                    (change)="updatePanX($event.target)"
+                    [value]="panX">
+
+                Pan Y:
+                <input
+                    class="small_input"
+                    type="number"
+                    step=1
+                    (change)="updatePanY($event.target)"
+                    [value]="panY">
+
+                Angle:
+                <input
+                    class="small_input"
+                    type="number"
+                    step=5
+                    (change)="updateAngle($event.target)"
+                    [value]="angle">
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <button (click)="resetParameters()">Restore default configuration</button>
+                <button (click)="exportToUrl()">Save current settings to URL</button>
+            </td>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,9 @@
+<div class="container">
+  <app-display #displayComponent>
+  </app-display>
+
+  <app-control-panel
+    (fractalUpdate)="handleFractalUpdate($event)"
+    (transformationsUpdate)="handleTransformationsUpdate($event)">
+  </app-control-panel>
+</div>
