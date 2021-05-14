@@ -1,27 +1,10 @@
-# DragonFractals
+# DragonFractal
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.1.4.
+Generates interactive fractals inspired by the Harter–Heighway dragon.
 
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+![image](https://cloud.githubusercontent.com/assets/8880269/23838063/800d6676-075f-11e7-8219-fbea28f28e1e.png)
+![image](https://cloud.githubusercontent.com/assets/8880269/24073582/7c6d0a3c-0bc7-11e7-93dd-89e8acdd69cd.png)
+![image](https://cloud.githubusercontent.com/assets/8880269/24074736/6776afc4-0bdc-11e7-9336-f49abcbd5e94.png)
+![image](https://cloud.githubusercontent.com/assets/8880269/24074765/2e594d86-0bdd-11e7-9a3c-cc645a9b6743.png)
+![image](https://cloud.githubusercontent.com/assets/8880269/24075148/091d231a-0be4-11e7-9fb1-a69b2c699e46.png)
+![image](https://cloud.githubusercontent.com/assets/8880269/24083284/3c054ba4-0ca2-11e7-895d-96b484111620.png)
