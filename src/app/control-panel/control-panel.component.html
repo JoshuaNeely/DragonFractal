@@ -8,7 +8,7 @@
 
     <table *ngIf="interactive">
         <tr>
-            <td colspan="100%">
+            <td>
                 Iterations
                 <input
                     type="number"
@@ -17,6 +17,13 @@
                     step=1
                     (change)="updateIterations($event.target)"
                     [value]="iterations">
+            </td>
+
+            <td colspan="100%">
+                Animation
+                <input
+                    (change)="updateAnimation($event.target)"
+                    [value]="animation">
             </td>
         </tr>
 

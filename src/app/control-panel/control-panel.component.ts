@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, Output, EventEmitter } from '@angular/core';
 
-import { ControlPanelEvent } from './control-panel-events';
+import { ControlPanelEvent, AnimationUpdate } from '../control-panel/control-panel-events';
 import { Pattern } from '../pattern';
 
 @Component({
@@ -12,7 +12,8 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
 
   humanFacingColors = 'blue green';
   colors: string[] = [];
-  iterations = 12;
+  iterations = 0;
+  animation = '2;0;15;true';
   humanFacingPattern = '1 1';
   rawPattern: Pattern = [];
   zoom = 100;
@@ -21,9 +22,11 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
   angle = 0;
 
   interactive = true;
+  animationTimeout !: number;
 
   @Output() fractalUpdate = new EventEmitter<ControlPanelEvent>();
   @Output() transformationsUpdate = new EventEmitter<ControlPanelEvent>();
+  @Output() animationUpdate = new EventEmitter<AnimationUpdate>();
 
   constructor() { }
 
@@ -34,6 +37,7 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.processPattern(this.humanFacingPattern);
     this.processColorInput();
+    this.processAnimation();
     this.emitFractalUpdates();
   }
 
@@ -95,6 +99,66 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
       this.iterations = newValue;
       this.emitFractalUpdates();
     }
+  }
+
+  updateAnimation(eventTarget: any): void {
+    if (eventTarget && eventTarget.value) {
+      const newValue = eventTarget.value;
+      this.animation = newValue;
+      this.processAnimation();
+    }
+  }
+
+  processAnimation(): void {
+    const splitAnimationValues = this.animation.split(';');
+    const newFps = parseInt(splitAnimationValues[0], 10) || 0;
+    const newStart = parseInt(splitAnimationValues[1], 10) || 0;
+    const newStop = parseInt(splitAnimationValues[2], 10) || 10;
+    const newBounce = splitAnimationValues[3] !== 'false';
+
+    this.updateAnimationInterval({
+      fps: newFps,
+      start: newStart,
+      stop: newStop,
+      bounce: newBounce,
+    });
+  }
+
+  updateAnimationInterval(update: AnimationUpdate): void {
+    clearInterval(this.animationTimeout);
+
+    let stepDirection = 1;
+
+    if (update.fps === 0) {
+      return;
+    }
+
+    this.animationTimeout = window.setInterval(() => {
+      if (this.iterations + stepDirection > update.stop) {
+        if (update.bounce) {
+          this.iterations = update.stop;
+          stepDirection *= -1;
+        }
+        else {
+          this.iterations = update.start - 1;
+        }
+      }
+
+      if (this.iterations + stepDirection < update.start) {
+        if (update.bounce) {
+          this.iterations = update.start;
+          stepDirection *= -1;
+        }
+        else {
+          this.iterations = update.stop + 1;
+        }
+      }
+
+
+      this.iterations += stepDirection;
+
+      this.emitFractalUpdates();
+    }, 1000 / update.fps);
   }
 
   updatePattern(eventTarget: any): void {

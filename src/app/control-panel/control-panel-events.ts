@@ -9,3 +9,10 @@ export interface ControlPanelEvent {
   angle: number;
   colors: string[];
 }
+
+export interface AnimationUpdate {
+  fps: number;
+  start: number;
+  stop: number;
+  bounce: boolean;
+}
