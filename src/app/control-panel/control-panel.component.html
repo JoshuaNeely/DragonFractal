@@ -26,6 +26,8 @@
                 <input
                     (change)="updateAnimation($event.target)"
                     [value]="animation">
+
+                <button (click)="this.animation = '0'; processAnimation()">Stop Animation</button>
             </td>
             <td>
                 "[fps] [start] [stop] [bounce-animation]"

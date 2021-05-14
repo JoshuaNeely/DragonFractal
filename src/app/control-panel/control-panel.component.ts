@@ -50,6 +50,7 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
     queryParams.set('iterations', `${this.iterations}`);
     queryParams.set('pattern', `${this.humanFacingPattern}`);
     queryParams.set('colors', `${this.humanFacingColors}`);
+    queryParams.set('animation', `${this.animation}`);
     location.href = '?' + queryParams.toString();
   }
 
@@ -69,6 +70,7 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
     this.iterations = this.getNumericQueryParam('iterations', this.iterations);
     this.humanFacingPattern = this.getStringQueryParam('pattern', this.humanFacingPattern);
     this.humanFacingColors = this.getStringQueryParam('colors', this.humanFacingColors);
+    this.animation = this.getStringQueryParam('animation', this.animation);
     this.interactive = this.getBooleanQueryParam('interactive', true);
   }
 
