@@ -1,6 +1,7 @@
 # DragonFractal
 
 Generates interactive fractals inspired by the Harter–Heighway dragon.
+See the writeup at https://joshua-neely.com/blog/dragon-fractals.html.
 
 ![image](https://cloud.githubusercontent.com/assets/8880269/23838063/800d6676-075f-11e7-8219-fbea28f28e1e.png)
 ![image](https://cloud.githubusercontent.com/assets/8880269/24073582/7c6d0a3c-0bc7-11e7-93dd-89e8acdd69cd.png)
