@@ -18,12 +18,17 @@
                     (change)="updateIterations($event.target)"
                     [value]="iterations">
             </td>
+        </tr>
 
+        <tr>
             <td colspan="100%">
                 Animation
                 <input
                     (change)="updateAnimation($event.target)"
                     [value]="animation">
+            </td>
+            <td>
+                "[fps] [start] [stop] [bounce-animation]"
             </td>
         </tr>
 

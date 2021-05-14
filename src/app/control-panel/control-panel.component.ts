@@ -13,7 +13,7 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
   humanFacingColors = 'blue green';
   colors: string[] = [];
   iterations = 0;
-  animation = '2;0;15;true';
+  animation = '2 0 15 true';
   humanFacingPattern = '1 1';
   rawPattern: Pattern = [];
   zoom = 100;
@@ -110,7 +110,7 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
   }
 
   processAnimation(): void {
-    const splitAnimationValues = this.animation.split(';');
+    const splitAnimationValues = this.animation.split(' ');
     const newFps = parseInt(splitAnimationValues[0], 10) || 0;
     const newStart = parseInt(splitAnimationValues[1], 10) || 0;
     const newStop = parseInt(splitAnimationValues[2], 10) || 10;
