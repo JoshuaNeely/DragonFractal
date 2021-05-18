@@ -76,9 +76,16 @@ export class DisplayComponent implements OnInit, AfterViewInit {
   }
 
   redraw(event: ControlPanelEvent): void {
-    const panXPixels = (event.panX/100) * this.canvas.width;
-    const panYPixels = (event.panY/100) * this.canvas.height;
-    this.renderingContext.clearRect(-panXPixels, -panYPixels, this.width, this.height);
+    const zoomRatio = event.zoom / 100;
+    const panXPixels = (event.panX / 100) * this.canvas.width;
+    const panYPixels = (event.panY / 100) * this.canvas.height;
+    const zoomedWidth = this.width / zoomRatio;
+    const zoomedHeight = this.height / zoomRatio;
+    const zoomedWidthDelta = zoomedWidth - this.width;
+    const zoomedHeightDelta = zoomedHeight - this.height;
+
+    this.renderingContext.clearRect(-panXPixels - (zoomedWidthDelta / 2), -panYPixels - (zoomedHeightDelta / 2),
+                                    this.width/zoomRatio, this.height/zoomRatio);
     this.drawPoints(this.points, event);
   }
 
