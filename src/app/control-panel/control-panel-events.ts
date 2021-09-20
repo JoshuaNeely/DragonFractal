@@ -2,6 +2,7 @@ import { Pattern } from '../pattern';
 
 export interface ControlPanelEvent {
   iterations: number;
+  midpointAngle: number;
   pattern: Pattern;
   zoom: number;
   panX: number;

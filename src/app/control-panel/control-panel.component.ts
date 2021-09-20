@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, Output, EventEmitter } from '@angular
 
 import { ControlPanelEvent, AnimationUpdate } from '../control-panel/control-panel-events';
 import { Pattern } from '../pattern';
+import { PatternTerm } from './patternTerm';
 
 @Component({
   selector: 'app-control-panel',
@@ -13,6 +14,7 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
   humanFacingColors = 'blue green';
   colors: string[] = [];
   iterations = 0;
+  midpointAngle = 45;
   animation = '2 0 15 true';
   humanFacingPattern = '1 1';
   rawPattern: Pattern = [];
@@ -103,6 +105,14 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
     }
   }
 
+  updateMidpointAngle(eventTarget: any): void {
+    if (eventTarget && eventTarget.value) {
+      const newValue = eventTarget.value;
+      this.midpointAngle = newValue;
+      this.emitFractalUpdates();
+    }
+  }
+
   updateAnimation(eventTarget: any): void {
     if (eventTarget && eventTarget.value) {
       const newValue = eventTarget.value;
@@ -175,14 +185,17 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
 
   private processPattern(patternString: string): void {
     const newPattern: number[] = [];
-    const onlyDigits = patternString.replace(/\D/g, '');
-    const digits = onlyDigits.split('');
-    for (const [index, digit] of digits.entries()) {
-      const term = (index % 2) ? 1 : -1;
-      for (let i = 0; i < Number(digit); i++) {
-        newPattern.push(term);
-      }
+
+    const rawPatternStrings = patternString.split(' ');
+    const patternTerms = rawPatternStrings.map((rawString) => {
+      return new PatternTerm(rawString);
+    });
+
+    for (const patternTerm of patternTerms) {
+      const angles = Array(patternTerm.repetitions).fill(patternTerm.angle);
+      newPattern.push(...angles);
     }
+
     this.rawPattern = newPattern;
     this.emitFractalUpdates();
   }
@@ -236,6 +249,7 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
   private emitFractalUpdates(): void {
     this.fractalUpdate.emit({
       iterations: this.iterations,
+      midpointAngle: this.midpointAngle,
       pattern: this.rawPattern,
       zoom: this.zoom,
       panX: this.panX,
@@ -248,6 +262,7 @@ export class ControlPanelComponent implements OnInit, AfterViewInit {
   private emitTransformationUpdates(): void {
     this.transformationsUpdate.emit({
       iterations: this.iterations,
+      midpointAngle: this.midpointAngle,
       pattern: this.rawPattern,
       zoom: this.zoom,
       panX: this.panX,

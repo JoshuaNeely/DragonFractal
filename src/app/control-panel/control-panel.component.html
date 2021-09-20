@@ -11,12 +11,21 @@
             <td>
                 Iterations
                 <input
+                    class="small_input"
                     type="number"
                     max=15
                     min=0
                     step=1
                     (change)="updateIterations($event.target)"
                     [value]="iterations">
+
+                Midpoint Angle
+                <input
+                    class="small_input"
+                    type="number"
+                    step=1
+                    (change)="updateMidpointAngle($event.target)"
+                    [value]="midpointAngle">
             </td>
         </tr>
 
@@ -53,8 +62,7 @@
                     id="patternString"
                     (change)="updatePattern($event.target)"
                     [value]="humanFacingPattern"
-                    pattern="([0-9]*((,\s*)|(\s+)))*[0-9]*"
-                    title="Enter whitespace/comma separated digits"
+                    title="Enter whitespace separated digits"
                     required>
             </td>
             <td>
