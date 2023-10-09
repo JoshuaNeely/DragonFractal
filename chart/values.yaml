@@ -1,0 +1,7 @@
+# This is the url route to this service, extending my domain name
+# eg "website" will translate to this url: "joshua-neely.com/website"
+# It is used in ingress routing, object names, etc
+appName: dragon-fractals
+
+# the docker image to run
+image: docker.io/joshuaneely/dragon-fractal:latest
