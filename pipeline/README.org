@@ -1,0 +1,3 @@
+These are steps that should be taken by a pipeline.
+
+I'm doing them manually for now.
