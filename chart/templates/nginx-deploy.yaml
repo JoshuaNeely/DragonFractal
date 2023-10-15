@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: {{ .Values.appName }}
-          image: {{ .Values.image }}
+          image: {{ .Values.image }}:{{ .Chart.AppVersion }}
           imagePullPolicy: Always
       imagePullSecrets:
         - name: dockerhub
