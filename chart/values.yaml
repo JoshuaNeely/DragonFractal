@@ -2,6 +2,7 @@
 # eg "website" will translate to this url: "joshua-neely.com/website"
 # It is used in ingress routing, object names, etc
 appName: dragon-fractals
+hostName: joshua-neely.com
 
 # the docker image to run
 image: docker.io/joshuaneely/dragon-fractal:latest

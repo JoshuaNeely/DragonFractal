@@ -2,9 +2,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Values.appName }}
+  annotations:
+    cert-manager.io/issuer: "letsencrypt-prod"
 spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - {{ .Values.appName }}.{{ .Values.hostName }}
+      secretName: "{{ .Values.appName }}-tls"  # created + populated automatically
   rules:
-  - http:
+  - host: {{ .Values.appName }}.{{ .Values.hostName }}
+    http:
       paths:
       - path: /
         pathType: Prefix
