@@ -1,0 +1,9 @@
+name: Helm Deployment
+run-name: ${{ gitea.actor }} is deploying project with helm.
+on: [push]
+
+jobs:
+  Helm Deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "This job was automatically triggered by a ${{ gitea.event_name }} event."
