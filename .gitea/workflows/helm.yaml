@@ -12,11 +12,19 @@ jobs:
       - name: 'checkout repository code'
         uses: 'actions/checkout@v3'
 
-      - name: 'Deploy'
-        uses: 'deliverybot/helm@v1'
+
+      - name: 'Helm Deploy'
+        uses: WyriHaximus/github-action-helm3@v3
         with:
-          release: 'dragon-fractals'
-          namespace: 'default'
-          chart: './chart'
-        env:
-          KUBECONFIG_FILE: '/home/jneely/.kube/gitea-config.yaml'
+          exec: helm upgrade --install dragon-fractals ./chart --wait --atomic --namespace=default
+          #kubeconfig: '${{ secrets.KUBECONFIG }}'
+          #overrule_existing_kubeconfig: "false"
+
+      # - name: 'Deploy'
+      #   uses: 'deliverybot/helm@v1'
+      #   with:
+      #     release: 'dragon-fractals'
+      #     namespace: 'default'
+      #     chart: './chart'
+      #   env:
+      #     KUBECONFIG_FILE: '/home/jneely/.kube/gitea-config.yaml'
