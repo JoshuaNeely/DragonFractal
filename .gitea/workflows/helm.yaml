@@ -12,11 +12,15 @@ jobs:
       - name: 'checkout repository code'
         uses: 'actions/checkout@v3'
 
-
-      - name: 'Helm Deploy'
+      - name: 'Helm Lint'
         uses: WyriHaximus/github-action-helm3@v3
         with:
-          exec: helm upgrade --install dragon-fractals ./chart --wait --atomic --namespace=default
+          exec: 'helm lint ./chart'
+
+      # - name: 'Helm Deploy'
+      #   uses: WyriHaximus/github-action-helm3@v3
+      #   with:
+      #     exec: 'helm upgrade --install dragon-fractals ./chart --wait --atomic --namespace=default'
           #kubeconfig: '${{ secrets.KUBECONFIG }}'
           #overrule_existing_kubeconfig: "false"
 
