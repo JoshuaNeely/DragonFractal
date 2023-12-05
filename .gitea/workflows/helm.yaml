@@ -17,19 +17,17 @@ jobs:
         with:
           exec: 'helm lint ./chart'
 
+      - name: 'Helm Deploy'
+        uses: WyriHaximus/github-action-helm3@v3
+        with:
+          exec: 'helm upgrade dragon-fractals chart/ --install --wait --atomic --namespace=default'
+          kubeconfig: '${{ secrets.KUBECONFIG }}'
+
       - name: 'Helm List'
         uses: WyriHaximus/github-action-helm3@v3
         with:
           exec: 'helm list'
           kubeconfig: '${{ secrets.KUBECONFIG }}'
-          #overrule_existing_kubeconfig: "false"
-
-      # - name: 'Helm Deploy'
-      #   uses: WyriHaximus/github-action-helm3@v3
-      #   with:
-      #     exec: 'helm upgrade --install dragon-fractals ./chart --wait --atomic --namespace=default'
-          #kubeconfig: '${{ secrets.KUBECONFIG }}'
-          #overrule_existing_kubeconfig: "false"
 
       # - name: 'Deploy'
       #   uses: 'deliverybot/helm@v1'
