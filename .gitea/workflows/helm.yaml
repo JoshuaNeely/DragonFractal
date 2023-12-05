@@ -15,6 +15,9 @@ jobs:
           mkdir -p /etc/docker/;
           echo '{ "insecure-registries" : [ "docker.joshua-neely.com" ] }' > /etc/docker/daemon.json;
 
+      - name: check if docker was already available
+        run: which docker
+
       - name: Install Docker
         run: curl -fsSL https://get.docker.com | sh
 
@@ -32,7 +35,7 @@ jobs:
           ls;
           docker build . -t docker.joshua-neely.com/dragon-fractal:latest;
 
-      - name: 'docker pull insecure registry'
+      - name: 'docker push insecure registry'
         run: |
           set -x;
           docker push docker.joshua-neely.com/dragon-fractal:latest;
@@ -53,21 +56,21 @@ jobs:
       # - name: 'Push image'
       #   run: docker push docker.joshua-neely.com/dragon-fractal:latest
 
-      # - name: 'Helm Lint'
-      #   uses: WyriHaximus/github-action-helm3@v3
-      #   with:
-      #     exec: 'helm lint ./chart'
+      - name: 'Helm Lint'
+        uses: WyriHaximus/github-action-helm3@v3
+        with:
+          exec: 'helm lint ./chart'
 
-      # - name: 'Helm Deploy'
-      #   uses: WyriHaximus/github-action-helm3@v3
-      #   with:
-      #     exec: 'helm upgrade dragon-fractals ./chart/ --install --wait --atomic --namespace=default'
-      #     # relies on an entire working kube config file dumped into this gitea secret.
-      #     kubeconfig: '${{ secrets.KUBECONFIG }}'
+      - name: 'Helm Deploy'
+        uses: WyriHaximus/github-action-helm3@v3
+        with:
+          exec: 'helm upgrade dragon-fractals ./chart/ --install --wait --atomic --namespace=default'
+          # relies on an entire working kube config file dumped into this gitea secret.
+          kubeconfig: '${{ secrets.KUBECONFIG }}'
 
-      # - name: 'Helm List'
-      #   uses: WyriHaximus/github-action-helm3@v3
-      #   with:
-      #     exec: 'helm list'
-      #     # relies on an entire working kube config file dumped into this gitea secret.
-      #     kubeconfig: '${{ secrets.KUBECONFIG }}'
+      - name: 'Helm List'
+        uses: WyriHaximus/github-action-helm3@v3
+        with:
+          exec: 'helm list'
+          # relies on an entire working kube config file dumped into this gitea secret.
+          kubeconfig: '${{ secrets.KUBECONFIG }}'
