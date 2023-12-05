@@ -20,20 +20,13 @@ jobs:
       - name: 'Helm Deploy'
         uses: WyriHaximus/github-action-helm3@v3
         with:
-          exec: 'helm upgrade dragon-fractals chart/ --install --wait --atomic --namespace=default'
+          exec: 'helm upgrade dragon-fractals ./chart/ --install --wait --atomic --namespace=default'
+          # relies on an entire working kube config file dumped into this gitea secret.
           kubeconfig: '${{ secrets.KUBECONFIG }}'
 
       - name: 'Helm List'
         uses: WyriHaximus/github-action-helm3@v3
         with:
           exec: 'helm list'
+          # relies on an entire working kube config file dumped into this gitea secret.
           kubeconfig: '${{ secrets.KUBECONFIG }}'
-
-      # - name: 'Deploy'
-      #   uses: 'deliverybot/helm@v1'
-      #   with:
-      #     release: 'dragon-fractals'
-      #     namespace: 'default'
-      #     chart: './chart'
-      #   env:
-      #     KUBECONFIG_FILE: '/home/jneely/.kube/gitea-config.yaml'
