@@ -1,6 +1,6 @@
 name: Helm Deployment
 run-name: ${{ gitea.actor }} is deploying project with helm.
-on: [push]
+on: [push, workflow_dispatch]
 
 
 jobs:
