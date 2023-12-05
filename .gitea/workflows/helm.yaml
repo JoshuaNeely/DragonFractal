@@ -12,6 +12,18 @@ jobs:
       - name: 'checkout repository code'
         uses: 'actions/checkout@v3'
 
+
+      - name: 'Set up Docker Buildx'
+        uses: docker/setup-buildx-action@v3
+
+      - name: 'Build and push image'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: docker.joshua-neely.com/dragon-fractal:latest
+
+
       - name: 'Helm Lint'
         uses: WyriHaximus/github-action-helm3@v3
         with:
