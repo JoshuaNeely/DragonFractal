@@ -23,9 +23,19 @@ jobs:
           set -x;
           docker pull docker.joshua-neely.com/dragon-fractal:0.2.0;
 
-      # - name: 'checkout repository code'
-      #   uses: 'actions/checkout@v3'
+      - name: 'checkout repository code'
+        uses: 'actions/checkout@v3'
 
+      - name: 'docker build'
+        run: |
+          set -x;
+          ls;
+          docker build . -t docker.joshua-neely.com/dragon-fractal:latest;
+
+      - name: 'docker pull insecure registry'
+        run: |
+          set -x;
+          docker push docker.joshua-neely.com/dragon-fractal:latest;
 
       # - name: Install Docker
       #   run: curl -fsSL https://get.docker.com | sh
