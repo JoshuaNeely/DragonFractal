@@ -17,6 +17,13 @@ jobs:
         with:
           exec: 'helm lint ./chart'
 
+      - name: 'Helm List'
+        uses: WyriHaximus/github-action-helm3@v3
+        with:
+          exec: 'helm list'
+          #kubeconfig: '${{ secrets.KUBECONFIG }}'
+          #overrule_existing_kubeconfig: "false"
+
       # - name: 'Helm Deploy'
       #   uses: WyriHaximus/github-action-helm3@v3
       #   with:
