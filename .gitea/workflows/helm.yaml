@@ -21,7 +21,7 @@ jobs:
         uses: WyriHaximus/github-action-helm3@v3
         with:
           exec: 'helm list'
-          #kubeconfig: '${{ secrets.KUBECONFIG }}'
+          kubeconfig: '${{ secrets.KUBECONFIG }}'
           #overrule_existing_kubeconfig: "false"
 
       # - name: 'Helm Deploy'
