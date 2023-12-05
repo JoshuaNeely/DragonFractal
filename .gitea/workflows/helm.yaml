@@ -9,50 +9,27 @@ jobs:
     steps:
       - run: echo "This job was automatically triggered by a ${{ gitea.event_name }} event."
 
+      # build and push image
       - name: 'config docker to accept insecure registry'
         run: |
           set -x;
           mkdir -p /etc/docker/;
           echo '{ "insecure-registries" : [ "docker.joshua-neely.com" ] }' > /etc/docker/daemon.json;
 
-      - name: Install Docker
-        run: curl -fsSL https://get.docker.com | sh
-
-      - name: 'docker pull insecure registry'
-        run: |
-          set -x;
-          docker pull docker.joshua-neely.com/dragon-fractal:0.2.0;
+      - name: 'install docker'
+        run: 'curl -fsSL https://get.docker.com | sh'
 
       - name: 'checkout repository code'
         uses: 'actions/checkout@v3'
 
       - name: 'docker build'
-        run: |
-          set -x;
-          ls;
-          docker build . -t docker.joshua-neely.com/dragon-fractal:latest;
+        run: 'docker build . -t docker.joshua-neely.com/dragon-fractal:latest;'
 
       - name: 'docker push insecure registry'
-        run: |
-          set -x;
-          docker push docker.joshua-neely.com/dragon-fractal:latest;
+        run: 'docker push docker.joshua-neely.com/dragon-fractal:latest;'
 
-      # - name: Install Docker
-      #   run: curl -fsSL https://get.docker.com | sh
 
-      # - name: 'Set up Docker Buildx'
-      #   uses: docker/setup-buildx-action@v3
-
-      # - name: 'Build image'
-      #   uses: docker/build-push-action@v5
-      #   with:
-      #     context: .
-      #     push: false
-      #     tags: docker.joshua-neely.com/dragon-fractal:latest
-
-      # - name: 'Push image'
-      #   run: docker push docker.joshua-neely.com/dragon-fractal:latest
-
+      # deploy image to cluster, with helm
       - name: 'Helm Lint'
         uses: WyriHaximus/github-action-helm3@v3
         with:
