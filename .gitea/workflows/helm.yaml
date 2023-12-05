@@ -25,6 +25,7 @@ jobs:
           context: .
           push: true
           tags: docker.joshua-neely.com/dragon-fractal:latest
+          allow: security.insecure
 
 
       - name: 'Helm Lint'
