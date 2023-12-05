@@ -2,6 +2,7 @@ name: Helm Deployment
 run-name: ${{ gitea.actor }} is deploying project with helm.
 on: [push]
 
+
 jobs:
   Helm Deployment:
     runs-on: ubuntu-latest
