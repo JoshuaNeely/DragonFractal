@@ -9,40 +9,55 @@ jobs:
     steps:
       - run: echo "This job was automatically triggered by a ${{ gitea.event_name }} event."
 
-      - name: 'checkout repository code'
-        uses: 'actions/checkout@v3'
-
+      - name: 'config docker to accept insecure registry'
+        run: |
+          set -x;
+          mkdir -p /etc/docker/;
+          echo '{ "insecure-registries" : [ "docker.joshua-neely.com" ] }' > /etc/docker/daemon.json;
 
       - name: Install Docker
         run: curl -fsSL https://get.docker.com | sh
 
-      - name: 'Set up Docker Buildx'
-        uses: docker/setup-buildx-action@v3
+      - name: 'docker pull insecure registry'
+        run: |
+          set -x;
+          docker pull docker.joshua-neely.com/dragon-fractal:0.2.0;
 
-      - name: 'Build and push image'
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: docker.joshua-neely.com/dragon-fractal:latest
-          allow: security.insecure
+      # - name: 'checkout repository code'
+      #   uses: 'actions/checkout@v3'
 
 
-      - name: 'Helm Lint'
-        uses: WyriHaximus/github-action-helm3@v3
-        with:
-          exec: 'helm lint ./chart'
+      # - name: Install Docker
+      #   run: curl -fsSL https://get.docker.com | sh
 
-      - name: 'Helm Deploy'
-        uses: WyriHaximus/github-action-helm3@v3
-        with:
-          exec: 'helm upgrade dragon-fractals ./chart/ --install --wait --atomic --namespace=default'
-          # relies on an entire working kube config file dumped into this gitea secret.
-          kubeconfig: '${{ secrets.KUBECONFIG }}'
+      # - name: 'Set up Docker Buildx'
+      #   uses: docker/setup-buildx-action@v3
 
-      - name: 'Helm List'
-        uses: WyriHaximus/github-action-helm3@v3
-        with:
-          exec: 'helm list'
-          # relies on an entire working kube config file dumped into this gitea secret.
-          kubeconfig: '${{ secrets.KUBECONFIG }}'
+      # - name: 'Build image'
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     context: .
+      #     push: false
+      #     tags: docker.joshua-neely.com/dragon-fractal:latest
+
+      # - name: 'Push image'
+      #   run: docker push docker.joshua-neely.com/dragon-fractal:latest
+
+      # - name: 'Helm Lint'
+      #   uses: WyriHaximus/github-action-helm3@v3
+      #   with:
+      #     exec: 'helm lint ./chart'
+
+      # - name: 'Helm Deploy'
+      #   uses: WyriHaximus/github-action-helm3@v3
+      #   with:
+      #     exec: 'helm upgrade dragon-fractals ./chart/ --install --wait --atomic --namespace=default'
+      #     # relies on an entire working kube config file dumped into this gitea secret.
+      #     kubeconfig: '${{ secrets.KUBECONFIG }}'
+
+      # - name: 'Helm List'
+      #   uses: WyriHaximus/github-action-helm3@v3
+      #   with:
+      #     exec: 'helm list'
+      #     # relies on an entire working kube config file dumped into this gitea secret.
+      #     kubeconfig: '${{ secrets.KUBECONFIG }}'
