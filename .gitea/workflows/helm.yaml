@@ -1,6 +1,6 @@
 name: Helm Deployment
 run-name: ${{ gitea.actor }} is deploying project with helm.
-on: [push, workflow_dispatch]
+on: [push]
 
 
 jobs:
@@ -8,3 +8,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "This job was automatically triggered by a ${{ gitea.event_name }} event."
+
+      - name: 'checkout repository code'
+        uses: 'actions/checkout@v3'
+
+      - name: 'Deploy'
+        uses: 'deliverybot/helm@v1'
+        with:
+          release: 'dragon-fractals'
+          namespace: 'default'
+          chart: './chart'
+        env:
+          KUBECONFIG_FILE: '/home/jneely/.kube/gitea-config.yaml'
