@@ -6,4 +6,4 @@ hostName: joshua-neely.com
 
 # the docker image to run
 # appVersion is used as the tag. Keep Chart.yaml up to date!
-image: docker.io/joshuaneely/dragon-fractal
+image: docker.joshua-neely.com/dragon-fractal
