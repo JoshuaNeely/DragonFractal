@@ -1,0 +1,21 @@
+name: Build Image
+run-name: ${{ gitea.actor }} build image.
+on: [push]
+
+jobs:
+  Image Build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "This job was automatically triggered by a ${{ gitea.event_name }} event."
+
+      - name: 'install docker'
+        run: 'curl -fsSL https://get.docker.com | sh'
+
+      - name: 'checkout repository code'
+        uses: 'actions/checkout@v3'
+
+      - name: 'docker build image'
+        run: 'docker build . -t docker.joshua-neely.com/dragon-fractal:latest;'
+
+      - name: 'docker push image to registry'
+        run: 'docker push docker.joshua-neely.com/dragon-fractal:latest;'
