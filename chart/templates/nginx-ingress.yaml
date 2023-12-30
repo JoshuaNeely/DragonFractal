@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: {{ .Values.appName }}
   annotations:
-    cert-manager.io/issuer: {{ .Values.issuer | default "letsencrypt-prod" }}
+    cert-manager.io/cluster-issuer: "letsencrypt-cluster-prod"
 spec:
   ingressClassName: nginx
   tls:
