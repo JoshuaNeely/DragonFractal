@@ -1,0 +1,7 @@
+services:
+  dragon-fractals:
+    build:
+      context: .
+    image: docker.joshua-neely.com/dragon-fractals:latest
+    ports:
+      - "80:80"
